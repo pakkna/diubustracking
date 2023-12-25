@@ -32,7 +32,7 @@ class DriverController extends Controller
 
         if ($validator->fails()) {
 
-            return redirect()->back()->withErrors($validator->errors());
+            return redirect()->back()->withErrors($validator->errors())->withInput();
         } else {
 
             try {
@@ -108,5 +108,16 @@ class DriverController extends Controller
         $allDrivers = User::getUserByType('Driver');
 
         return view('dashboard.applicants.showdrivers', compact('allDrivers'));
+    }
+    public function driver_delete($user_id = null)
+    {
+        $driver = User::find($user_id);
+
+        if ($driver->driver->delete()) {
+            $driver->delete();
+            return redirect()->back()->with("flashMessageSuccess", "Driver Deleted Succesfully");
+        } else {
+            return redirect()->back()->withErrors("flashMessageDanger", "Driver Deletetion Error!");
+        }
     }
 }

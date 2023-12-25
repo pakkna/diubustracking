@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 
 class DatabaseSeeder extends Seeder
@@ -23,7 +24,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'diuadmin',
             'email' => 'admin@diutransport.com',
             'mobile' => '01824713030',
-            'password' => '$2y$10$V8HnsCylKImmbNZ5/LqxQ.GDme0JQRKk9/QIU27ucg7JrkqEFVCda', //123456
+            'password' => Hash::make(123456), //123456
             'usertype' => 'Admin',
             'profile_photo' => 'sukanto.jpg',
             'registered_by' => 'System Administrator',

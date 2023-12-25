@@ -126,10 +126,10 @@
                             <td>{{ $singledriver->driver->date_of_birth }}</td>
                             <td>{{ $singledriver->is_active }}</td>
                             <td>{{ $singledriver->created_at}}</td>
-                            <td><a href="javascript:void(0);" class="btn-shadow btn btn-sm btn-warning" title=""><i
-                                        class="fa fa-edit"></i></a>
-                                <a href="javascript:void(0);" class="btn-shadow btn btn-danger" title="Driver Remove"><i
-                                        class="fa fa-trash"></i></a>
+                            <td>{{-- <a href="javascript:void(0);" class="btn-shadow btn btn-sm btn-warning" title=""><i
+                                        class="fa fa-edit"></i></a> --}}
+                                <a href="/driver-delete/{{$singledriver->id }}" class="btn-shadow btn btn-danger"
+                                    title="Driver Remove"><i class="fa fa-trash"></i></a>
             </div>
             </td>
             </tr>

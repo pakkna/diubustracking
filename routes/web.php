@@ -31,4 +31,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/driver-registration', [DriverController::class, 'registration_view']);
     Route::post('/driver-store', [DriverController::class, 'driverStore'])->name("driver.store");
     Route::get('/registered-drivers', [DriverController::class, 'registered_drivers'])->name("driver.all");
+    Route::get('/driver-delete/{user_id}', [DriverController::class, 'driver_delete'])->name("driver.delete");
 });

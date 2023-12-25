@@ -58,14 +58,14 @@
                                         <label class="input-label">Driver Name <span
                                                 class="important text-danger">*</span></label>
                                         <input class="form-control" type="text" name="name" placeholder="Full name"
-                                            required>
+                                            value="{{ old('name') }}" required>
 
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
                                         <label class="input-label">Mobile Number ( As Username ) <span
                                                 class="important text-danger">*</span></label>
                                         <input class="form-control" type="text" name="mobile"
-                                            placeholder="Mobile Number " required>
+                                            placeholder="Mobile Number " value="{{ old('mobile') }}" required>
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
                                         <label class="input-label">Password <span
@@ -78,20 +78,20 @@
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
                                         <label class="input-label">Driver Email </label>
                                         <input class="form-control" type="email" name="email"
-                                            placeholder="Email address">
+                                            placeholder="Email address" value="{{ old('email') }}">
 
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
                                         <label class="input-label">Driver Address <span
                                                 class="important">*</span></label>
                                         <input class="form-control" type="textarea" name="address"
-                                            placeholder="Present Address" required>
+                                            placeholder="Present Address" value="{{ old('address') }}" required>
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
                                         <label class="input-label">Date of Birth <span
                                                 class="important text-danger">*</span></label>
                                         <input class="form-control" type="date" data-toggle="datepicker" name="dob"
-                                            placeholder="Date of Birth" required>
+                                            placeholder="Date of Birth" value="{{ old('dob') }}" required>
                                     </div>
 
                                 </div>
@@ -100,13 +100,13 @@
                                         <label class="input-label">License No <span
                                                 class="important text-danger">*</span></label>
                                         <input class="form-control" type="text" name="license_number"
-                                            placeholder="License  Number " required>
+                                            placeholder="License  Number " value="{{ old('license_number') }}" required>
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
                                         <label class="input-label">National ID / Passport<span
                                                 class="important text-danger">*</span></label>
                                         <input class="form-control" type="textarea" name="nid_no"
-                                            placeholder="National ID/ Passport">
+                                            placeholder="National ID/ Passport" value="{{ old('nid_no') }}">
                                     </div>
                                     <div class="custom-file form-line-height col-lg-4 col-md-12 mt-4">
                                         <input type="file" class="custom-file-input" name="nid_image"
