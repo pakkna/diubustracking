@@ -95,7 +95,7 @@ class DriverController extends Controller
 
                 //$this->send_raw_email_with_attachment($request->Email, $password);
 
-                return redirect('/registered-drivers')->with("flashMessageSuccess", "Your Driver info Stored Succesfully");
+                return redirect()->back()->with("flashMessageSuccess", "Your Driver info Stored Succesfully");
             } catch (\Throwable $th) {
                 //DB::rollback();
 
