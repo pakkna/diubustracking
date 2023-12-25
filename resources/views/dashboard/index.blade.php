@@ -1,3 +1,6 @@
+@section('dashboard', 'mm-active')
+@section('Applications-li', 'mm-active')
+@section('Applications-ul', 'mm-show')
 @include('layouts.header')
 
 @include('layouts.sidebar')

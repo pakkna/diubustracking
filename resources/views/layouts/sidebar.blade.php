@@ -3,6 +3,13 @@
     <div class="app-sidebar__inner">
 
         <ul class="vertical-nav-menu metismenu">
+            <li class="app-sidebar__heading">Dashbaord Overview</li>
+            <li>
+                <a href="{{URL('/dashboard')}}" aria-expanded="true" class="@yield('dashboard')">
+                    <i class="metismenu-icon pe-7s-home"></i>
+                    Dashbaord
+                </a>
+            </li>
             <li class="app-sidebar__heading">Driver Information</li>
             <li>
                 <a href="{{URL('/driver-registration')}}" aria-expanded="true" class="@yield('driver-registration')">

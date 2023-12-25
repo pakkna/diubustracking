@@ -191,18 +191,18 @@ class ApiAuthController extends Controller
             if ($token) {
                 $user =  auth('api')->user();
                 //$update_user = User::UpdateLoginDate($user->id);
-                $err["id"] = $user->id;
-                $err["name"] = $user->name;
-                $err["email"] = $user->email != "" ? $user->email : '';
-                $err["username"] = $user->username != "" ? $user->username : '';
-                $err["mobile"] = $user->mobile != "" ? $user->mobile : '';
-                $err["address"] = $user->address != "" ? $user->address : '';
-                $err["registered_by"] = $user->registered_by;
+                $data["id"] = $user->id;
+                $data["name"] = $user->name;
+                $data["email"] = $user->email != "" ? $user->email : '';
+                $data["username"] = $user->username != "" ? $user->username : '';
+                $data["mobile"] = $user->mobile != "" ? $user->mobile : '';
+                $data["address"] = $user->address != "" ? $user->address : '';
+                $data["registered_by"] = $user->registered_by;
                 $authenticate_token = $this->respondWithToken($token);
-                $err["jwt_token"] = $authenticate_token;
+                $data["jwt_token"] = $authenticate_token;
 
                 $this->activity_log('Login', 'Deafult Login', 'Login Successfully', 'Done', $user->id);
-                return $this->ResponseJson(false, 'Login Successfull!', $err, 200);
+                return $this->ResponseJson(false, 'Login Successfull!', $data, 200);
             } else {
                 $this->activity_log('Login', 'Deafult Login', 'Login Credentials Not Matched', 'Faild', $request->username);
                 return $this->ResponseJson(true, "Invalid Credentials.", (object)[], 401);
