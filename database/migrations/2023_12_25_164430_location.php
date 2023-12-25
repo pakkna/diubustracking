@@ -14,14 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('location', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->unique()->primary();
+            $table->bigIncrements('id');
             $table->string('lat');
             $table->string('long');
             $table->unsignedBigInteger('bus_id');
             $table->unsignedBigInteger('driver_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('bus_id')->references('id')->on('bus_list')->onDelete('cascade');
-            $table->foreign('driver_id')->references('driver_id')->on('driver_list')->onDelete('cascade');
+            $table->foreign('driver_id')->references('id')->on('driver_info')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();

@@ -17,7 +17,7 @@ use DB;
 
 class HireProcessController extends Controller
 {
-    use Email;
+    /* use Email; */
 
     public function pending_applicants_view(Request $request)
     {
@@ -141,10 +141,8 @@ class HireProcessController extends Controller
                 User::where('EmpOrCustomerId', $request->id)->update(['IsActive' => (int)$request->action]);
                 echo json_encode(['msg' => 'Success', 'type' => $request->type, 'action' => $request->action]);
             } catch (\Throwable $th) {
-                echo json_encode(['msg' => $th->getMessage(), 'type' => $request->type,'action' => $request->action]);
+                echo json_encode(['msg' => $th->getMessage(), 'type' => $request->type, 'action' => $request->action]);
             }
-
-
         } else {
             echo json_encode(['msg' => 'error', 'type' => '']);
         }
@@ -297,11 +295,12 @@ class HireProcessController extends Controller
             ->rawColumns(['mail', 'select', 'status', 'action'])
             ->make(true);
     }
-    public function query_form_view(Request $request){
+    public function query_form_view(Request $request)
+    {
 
-        $questions=QuestionBank::where('IsActive',1)->get()->pluck('Question','Id',);
+        $questions = QuestionBank::where('IsActive', 1)->get()->pluck('Question', 'Id',);
 
-        return  view('fontend.query-form',compact('questions'));
+        return  view('fontend.query-form', compact('questions'));
     }
     public function query_submit_applicants_data(Request $request)
     {
@@ -390,9 +389,9 @@ class HireProcessController extends Controller
             'employee_info.DateCreated',
             'employee_info.IsActive',
 
-            )->join('user_master','user_master.EmpOrCustomerId','employee_info.Id')
-            ->where('user_master.model_id',3)
-            ->where('user_master.IsEmployee',1)
+        )->join('user_master', 'user_master.EmpOrCustomerId', 'employee_info.Id')
+            ->where('user_master.model_id', 3)
+            ->where('user_master.IsEmployee', 1)
             ->whereBetween('employee_info.DateCreated', [$start_date . " 00:00:00", $end_date . " 23:59:59"])
             ->orderBy('employee_info.DateCreated', 'DESC');
 
@@ -479,8 +478,8 @@ class HireProcessController extends Controller
 
             $employeInfo = new EmployeInfo();
 
-            $latest=$employeInfo->latest()->first();
-            $rowCount = empty($latest)? '1': strval($latest->Id + 1);
+            $latest = $employeInfo->latest()->first();
+            $rowCount = empty($latest) ? '1' : strval($latest->Id + 1);
 
             $employeInfo->EmpCode = "GAC-" . str_pad($rowCount, 4, '0', STR_PAD_LEFT);
             $employeInfo->IDCardNumber = "GAC-CLR-" . str_pad($rowCount, 4, '0', STR_PAD_LEFT);
@@ -495,12 +494,12 @@ class HireProcessController extends Controller
 
             $userMaster = new User();
 
-            $password =str_random(8);
+            $password = str_random(8);
             $userMaster->Email = $applicant->email;
             $userMaster->PasswordHash = bcrypt($password);
             $userMaster->UserName = $applicant->name;
             $userMaster->phone = $applicant->phone;
-            $userMaster->IsEmployee =1;
+            $userMaster->IsEmployee = 1;
             $userMaster->IsActive = 1;
             $userMaster->EmpOrCustomerId = $employeInfo->Id;
             $userMaster->model_id = 3; //cleaner
@@ -519,7 +518,7 @@ class HireProcessController extends Controller
 
             DB::commit();
 
-            $this->send_raw_email_with_attachment($applicant->email,$password);
+            $this->send_raw_email_with_attachment($applicant->email, $password);
 
             return redirect('hired-employes-list')->with("flashMessageSuccess", "Mr/Mrs " . $applicant->name . " Created As A Cleaner Employee.");
         } catch (\Throwable $th) {
@@ -596,31 +595,29 @@ class HireProcessController extends Controller
         if ($validator->fails()) {
 
             return redirect()->back()->withErrors($validator->errors());
-
-        }else {
+        } else {
 
             try {
 
                 DB::beginTransaction();
 
-                if($request->hasFile('image')){
+                if ($request->hasFile('image')) {
 
                     $image = $request->file('image');
 
-                    $name = time().'.'.$image->getClientOriginalExtension();
+                    $name = time() . '.' . $image->getClientOriginalExtension();
 
                     $destination_path = public_path('/assets/images/avatars/cleaner/');
 
-                    $image_path='/assets/images/avatars/cleaner/'.$name;
-
-                 }else{
-                    $image_path='';
-                 }
+                    $image_path = '/assets/images/avatars/cleaner/' . $name;
+                } else {
+                    $image_path = '';
+                }
 
                 $employeInfo = new EmployeInfo();
 
-                $latest=$employeInfo->latest()->first();
-                $rowCount = empty($latest)? '1': strval($latest->Id + 1);
+                $latest = $employeInfo->latest()->first();
+                $rowCount = empty($latest) ? '1' : strval($latest->Id + 1);
 
                 $employeInfo->EmpCode = "GAC-" . str_pad($rowCount, 4, '0', STR_PAD_LEFT);
                 $employeInfo->IDCardNumber = "GAC-CLR-" . str_pad($rowCount, 4, '0', STR_PAD_LEFT);
@@ -631,11 +628,11 @@ class HireProcessController extends Controller
                 $employeInfo->PermanentAddress = $request->permanent_address;
                 $employeInfo->Nationality = 'US';
                 $employeInfo->Email = $request->Email;
-                $employeInfo->Phone =$request->phone;
-                $employeInfo->MaritalStatus =$request->marital_status;
+                $employeInfo->Phone = $request->phone;
+                $employeInfo->MaritalStatus = $request->marital_status;
                 $employeInfo->DOB = date_validate($request->dob);
-                $employeInfo->PassportNumber =$request->doc_no;
-                $employeInfo->ImageUrl =$image_path;
+                $employeInfo->PassportNumber = $request->doc_no;
+                $employeInfo->ImageUrl = $image_path;
                 $employeInfo->CreatedBy = Auth::user()->EmpOrCustomerId;
                 $employeInfo->IsActive = 1;
 
@@ -644,14 +641,14 @@ class HireProcessController extends Controller
 
                 $userMaster = new User();
 
-                $password =str_random(8);
+                $password = str_random(8);
                 $userMaster->Email = $request->Email;
                 $userMaster->PasswordHash = bcrypt($password);
                 $userMaster->RawPassword = $password;
                 $userMaster->UserName = $request->name;
                 $userMaster->phone = $request->phone;
                 $userMaster->ImageUrl =   $image_path;
-                $userMaster->IsEmployee=1;
+                $userMaster->IsEmployee = 1;
                 $userMaster->IsActive = 1;
                 $userMaster->EmpOrCustomerId = $employeInfo->Id;
                 $userMaster->model_id = 3; //cleaner
@@ -668,15 +665,14 @@ class HireProcessController extends Controller
 
                 DB::commit();
 
-                if($request->hasFile('image')){
+                if ($request->hasFile('image')) {
                     $image->move($destination_path, $name);
                 }
 
-                $this->send_raw_email_with_attachment($request->Email,$password);
+                $this->send_raw_email_with_attachment($request->Email, $password);
 
 
-                return redirect('/hired-employes-list')->with("flashMessageSuccess","Your Employee info Stored Succesfully");
-
+                return redirect('/hired-employes-list')->with("flashMessageSuccess", "Your Employee info Stored Succesfully");
             } catch (\Throwable $th) {
                 DB::rollback();
 

@@ -3,11 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Auth;
+use App\Models\Driver;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Auth;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -18,6 +19,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
+    protected $table = 'users';
     protected $fillable = [
         'name',
         'username',
@@ -73,5 +75,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return Auth::user()->usertype;
         // return UserRole::select('role_master.RoleName')->join('role_master','role_master.Id','user_role.RoleId')->where('user_role.UserId', Auth::user()->Id)->first()->RoleName;
+    }
+    static function getUserByType($type)
+    {
+        return self::where('usertype', $type)->paginate(10);
+        // return UserRole::select('role_master.RoleName')->join('role_master','role_master.Id','user_role.RoleId')->where('user_role.UserId', Auth::user()->Id)->first()->RoleName;
+    }
+    public function driver()
+    {
+        return $this->hasOne(Driver::class, 'user_id');
     }
 }

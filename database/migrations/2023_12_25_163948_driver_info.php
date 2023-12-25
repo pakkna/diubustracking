@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('driver_list', function (Blueprint $table) {
-            $table->unsignedBigInteger('driver_id')->unique()->primary();
+        Schema::create('driver_info', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('driver_name');
             $table->string('primary_contact');
             $table->string('license_number')->nullable();
             $table->string('license_photo')->nullable();
             $table->string('address')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('sex')->nullable();
             $table->string('nid_number')->nullable();
             $table->string('nid_photo')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
@@ -28,7 +30,7 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             // Create an index on the columns.
-            $table->index(['driver_id', 'user_id']);
+            $table->index(['id', 'user_id']);
         });
     }
 

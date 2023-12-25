@@ -3,7 +3,19 @@
     <div class="app-sidebar__inner">
 
         <ul class="vertical-nav-menu metismenu">
-
+            <li class="app-sidebar__heading">Driver Information</li>
+            <li>
+                <a href="{{URL('/driver-registration')}}" aria-expanded="true" class="@yield('driver-registration')">
+                    <i class="metismenu-icon pe-7s-note"></i>
+                    Driver Registration
+                </a>
+            </li>
+            <li>
+                <a href="{{URL('/registered-drivers')}}" aria-expanded="true" class="@yield('registered-drivers')">
+                    <i class="metismenu-icon pe-7s-note2"></i>
+                    Registered Drivers
+                </a>
+            </li>
             <li class="app-sidebar__heading">Bus & Routes Info</li>
             <li>
                 <a href="{{URL('/pending-applicants-list')}}" aria-expanded="true"
@@ -30,20 +42,6 @@
                     Bus Route List
                 </a>
             </li>
-            </li>
-            <li class="app-sidebar__heading">Driver Information</li>
-            <li>
-                <a href="{{URL('/pending-invoices')}}" aria-expanded="true" class="@yield('pending-invoices-list')">
-                    <i class="metismenu-icon pe-7s-note"></i>
-                    Driver Registration
-                </a>
-            </li>
-            <li>
-                <a href="{{URL('/query-applied-applicants')}}" aria-expanded="true"
-                    class="@yield('query-applied-applicants')">
-                    <i class="metismenu-icon pe-7s-note2"></i>
-                    Registered Drivers
-                </a>
             </li>
             <li class="app-sidebar__heading">Assign Bus To Driver</li>
 

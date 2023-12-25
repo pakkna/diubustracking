@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('bus_list', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->unique()->primary();
+            $table->bigIncrements('id');
             $table->string('bus_name');
             $table->string('bus_number')->nullable();
             $table->timestamp('created_at')->useCurrent();

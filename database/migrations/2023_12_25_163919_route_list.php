@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('route_list', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->unique()->primary();
+            $table->bigIncrements('id');
             $table->string('route_name');
             $table->string('route_code')->nullable();
             $table->longText('route_details')->nullable();
