@@ -59,7 +59,7 @@
                                     <div class="widget-chart-flex text-success">
                                         <div class="fsize-4">
                                             <small><i class="fa fa-bus"> </i></small>
-                                            {{ $ActiveCleaners }}
+                                            {{ $totalBus }}
                                         </div>
                                     </div>
                                 </div>
@@ -78,7 +78,7 @@
                                     <div class="widget-chart-flex text-primary">
                                         <div class="fsize-4">
                                             <small><i class="metismenu-icon pe-7s-users"></i></small>
-                                            {{ $Customers }}
+                                            {{ $totalDriver }}
                                         </div>
                                     </div>
                                 </div>
@@ -98,7 +98,7 @@
                                         <div class="fsize-4 text-danger">
                                             <small class=" text-danger"><i
                                                     class="metismenu-icon pe-7s-exapnd2"></i></small>
-                                            {{ $PendingOrders }}
+                                            {{ $unAssignBus }}
                                         </div>
 
                                     </div>
@@ -119,7 +119,7 @@
                                         <div class="fsize-4 text-primary">
                                             <small class=" text-bg-primary"><i
                                                     class="metismenu-icon pe-7s-check"></i></small>
-                                            {{ $PendingShedule }}
+                                            {{ $assignBus }}
                                         </div>
                                     </div>
                                 </div>
@@ -139,7 +139,7 @@
                                         <div class="fsize-4">
                                             <small class="text-warning"> <i
                                                     class="metismenu-icon pe-7s-way"></i></small>
-                                            {{ $TaskAssigned }}
+                                            {{ $totalRoute }}
                                         </div>
 
                                     </div>
@@ -160,7 +160,7 @@
                                         <div class="fsize-4">
                                             <small class="text-success"><i class="metismenu-icon pe-7s-users"></i>
                                             </small>
-                                            {{ $TaskCompleted }}
+                                            {{ $totalUser }}
                                         </div>
 
                                     </div>

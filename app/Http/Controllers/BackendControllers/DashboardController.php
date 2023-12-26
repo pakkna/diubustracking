@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\BackendControllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Bus;
+use App\Models\User;
+use App\Models\Route;
+use App\Models\Driver;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 
 
@@ -19,14 +23,15 @@ class DashboardController extends Controller
         // $TaskAssigned = TaskInfo::where('IsCompleted', 0)->count();
         // $TaskCompleted = TaskInfo::where('IsCompleted', 1)->count();
 
-        $ActiveCleaners = 30;
-        $Customers = 10;
-        $PendingOrders = 8;
-        $PendingShedule = 22;
-        $TaskAssigned = 15;
-        $TaskCompleted = 10;
+        $totalBus = Bus::count();
+        $totalDriver = Driver::count();
+        $unAssignBus = 0;
+        $assignBus = 0;
+        $totalRoute = Route::count();
+        $totalUser = User::where('usertype', 'Active')->count();
 
-        return  view('dashboard/index', compact('ActiveCleaners', 'Customers', 'PendingOrders', 'PendingShedule', 'TaskAssigned', 'TaskCompleted'));
+
+        return  view('dashboard/index', compact('totalBus', 'totalDriver', 'totalRoute', 'unAssignBus', 'assignBus', 'totalUser'));
     }
 
     public function all_clear()
