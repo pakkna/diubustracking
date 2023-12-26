@@ -31,13 +31,13 @@
                 </a>
             </li>
             <li>
-                <a href="{{URL('/add-cleaner')}}" aria-expanded="true" class="@yield('add-cleaner')">
+                <a href="{{URL('/route-create')}}" aria-expanded="true" class="@yield('route-create')">
                     <i class="metismenu-icon pe-7s-network"></i>
                     Add Bus Route
                 </a>
             </li>
             <li>
-                <a href="{{URL('/hired-employes-list')}}" aria-expanded="true" class="@yield('hired-employes-list')">
+                <a href="{{URL('/route-list')}}" aria-expanded="true" class="@yield('route-list')">
                     <i class="metismenu-icon pe-7s-way"></i>
                     Bus Route List
                 </a>

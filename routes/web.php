@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\BackendControllers\RouteController;
 use App\Http\Controllers\BackendControllers\BusController;
 use App\Http\Controllers\BackendControllers\DriverController;
 use App\Http\Controllers\BackendControllers\DashboardController;
-use App\Http\Controllers\BackendControllers\HireProcessController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,4 +40,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/bus-list', [BusController::class, 'busList'])->name("bus.list");
     Route::get('/bus-status/{status}/{id}', [BusController::class, 'busStatusChange'])->name("bus.status");
     Route::get('/bus-delete/{id}', [BusController::class, 'busDelete'])->name("bus.delete");
+
+    // Bus Registration
+    Route::get('/route-create', [RouteController::class, 'route_create']);
+    Route::post('/route-store', [RouteController::class, 'routeStore'])->name("route.store");
+    Route::get('/route-list', [RouteController::class, 'routeList'])->name("route.list");
 });

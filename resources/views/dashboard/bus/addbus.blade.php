@@ -42,7 +42,7 @@
 
         <button class="btn btn-primary btn-lg" id="add_expense_open">
             <span class="mr-2 opacity-7">
-                <i class="icon icon-plus ion-ios-analytics-outline"></i>
+                <i class="fa fa-plus"></i>
             </span>
             <span class="mr-1 ">Bus Registration</span>
         </button>
