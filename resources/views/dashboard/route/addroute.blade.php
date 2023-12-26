@@ -45,82 +45,57 @@
             <div class="col-md-12">
                 <div class="main-card mb-3 card">
 
-                    <form method="post" action="{{ route('driver.store') }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ route('route.store') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         @include("layouts.includes.flash")
 
                         <div class="card-body ">
                             <div class="section">
-                                <h5 class="card-title" style="margin-top: 7px;">Fill Up Driver
+                                <h5 class="card-title" style="margin-top: 7px;">Fill Up Route
                                     Details : </h5>
                                 <div class="form-row">
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
-                                        <label class="input-label">Driver Name <span
+                                        <label class="input-label">Route Name <span
                                                 class="important text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="name" placeholder="Full name"
-                                            value="{{ old('name') }}" required>
+                                        <input class="form-control" type="text" name="route_name"
+                                            placeholder="Route Name" value="{{ old('route_name') }}" required>
 
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
-                                        <label class="input-label">Mobile Number ( As Username ) <span
+                                        <label class="input-label">Route Code <span
                                                 class="important text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="mobile"
-                                            placeholder="Mobile Number " value="{{ old('mobile') }}" required>
+                                        <input class="form-control" type="text" name="route_code"
+                                            placeholder="Route Code" value="{{ old('route_code') }}" required>
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
-                                        <label class="input-label">Password <span
+                                        <label class="input-label">Route Details <span
                                                 class="important text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="password "
-                                            placeholder="Enter Driver Password " required>
+                                        <input class="form-control" type="text" name="route_details"
+                                            placeholder="Route Details" value="{{ old('route_details') }}" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
-                                        <label class="input-label">Driver Email </label>
-                                        <input class="form-control" type="email" name="email"
-                                            placeholder="Email address" value="{{ old('email') }}">
+                                        <label class="input-label">Start Time Slot </label>
+                                        <input class="form-control" type="text" name="start_time_slot"
+                                            placeholder="Start Time Slot" value="{{ old('start_time_slot') }}">
 
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
-                                        <label class="input-label">Driver Address <span
+                                        <label class="input-label">Departure Time Slot <span
                                                 class="important">*</span></label>
-                                        <input class="form-control" type="textarea" name="address"
-                                            placeholder="Present Address" value="{{ old('address') }}" required>
+                                        <input class="form-control" type="text" name="departure_time_slot"
+                                            placeholder="Departure Time Slot" value="{{ old('departure_time_slot') }}"
+                                            required>
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
-                                        <label class="input-label">Date of Birth <span
+                                        <label class="input-label">Route Map Url <span
                                                 class="important text-danger">*</span></label>
-                                        <input class="form-control" type="date" data-toggle="datepicker" name="dob"
-                                            placeholder="Date of Birth" value="{{ old('dob') }}" required>
+                                        <input class="form-control" type="text" data-toggle="datepicker"
+                                            name="route_map_url " placeholder="Route Map Url"
+                                            value="{{ old('route_map_url') }}" required>
                                     </div>
 
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group form-line-height col-lg-4 col-md-12">
-                                        <label class="input-label">License No <span
-                                                class="important text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="license_number"
-                                            placeholder="License  Number " value="{{ old('license_number') }}" required>
-                                    </div>
-                                    <div class="form-group form-line-height col-lg-4 col-md-12">
-                                        <label class="input-label">National ID / Passport<span
-                                                class="important text-danger">*</span></label>
-                                        <input class="form-control" type="textarea" name="nid_no"
-                                            placeholder="National ID/ Passport" value="{{ old('nid_no') }}">
-                                    </div>
-                                    <div class="custom-file form-line-height col-lg-4 col-md-12 mt-4">
-                                        <input type="file" class="custom-file-input" name="nid_image"
-                                            id="validatedCustomFile">
-                                        <label class="custom-file-label" for="validatedCustomFile">Choose
-                                            NID Photo...</label>
-                                    </div>
-                                    <script>
-                                        // Add the following code if you want the name of the file appear on select
-                                        $(".custom-file-input").on("change", function() {
-                                          var fileName = $(this).val().split("\\").pop();
-                                          $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-                                        });
-                                    </script>
                                 </div>
 
                             </div>
