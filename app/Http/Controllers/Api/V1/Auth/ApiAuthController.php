@@ -32,7 +32,7 @@ class ApiAuthController extends Controller
         $validator = Validator::make($request->all(), [
 
             'name' => 'required|string',
-            'email' => 'required|email|max:255|unique:users,username',
+            'email' => 'required|email|max:255|unique:users,email',
             'mobile' => 'required|regex:/(01)[0-9]{9}/|unique:users,mobile',
             'password' => 'required|min:7'
         ]);
@@ -52,7 +52,6 @@ class ApiAuthController extends Controller
                     'mobile' => $request->mobile,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
-                    'address' => $request->address ?? '',
                     'usertype' => "User",
                     'register_by' => "App"
                 ]);
@@ -61,7 +60,7 @@ class ApiAuthController extends Controller
                 if ($user->save()) {
 
                     $set_request = new Request([
-                        'username' => $request->username,
+                        'username' => $request->email,
                         'password' => $request->password
                     ]);
 
