@@ -193,6 +193,7 @@ class ApiAuthController extends Controller
                 $data["email"] = $user->email != "" ? $user->email : '';
                 $data["username"] = $user->username != "" ? $user->username : '';
                 $data["mobile"] = $user->mobile != "" ? $user->mobile : '';
+                $data["usertype"] = $user->usertype != "" ? $user->usertype : 'User';
                 $data["address"] = $user->address != "" ? $user->address : '';
                 $data["registered_by"] = $user->registered_by;
                 $authenticate_token = $this->respondWithToken($token);
