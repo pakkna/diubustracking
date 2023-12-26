@@ -112,8 +112,8 @@
                     class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>Bus Name</th>
-                            <th>Bus Number</th>
+                            <th>Route Name</th>
+                            <th>Route Number</th>
                             <th>Start Time</th>
                             <th>Departure Time</th>
                             <th>Route Details</th>
