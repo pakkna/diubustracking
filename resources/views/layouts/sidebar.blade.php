@@ -67,7 +67,7 @@
                 </a>
 
             </li>
-            <li class="app-sidebar__heading">Bus Schedule Info</li>
+            {{-- <li class="app-sidebar__heading">Bus Schedule Info</li>
             <li>
                 <a href="{{URL('/expense-category-list')}}" aria-expanded="true"
                     class="@yield('expense-category-list')">
@@ -80,7 +80,15 @@
                     <i class="metismenu-icon pe-7s-tools"></i>
                     Show All Time Schedules
                 </a>
+            </li> --}}
+            <li class="app-sidebar__heading">App User Info</li>
+            <li>
+                <a href="{{URL('/app-users')}}" aria-expanded="true" class="@yield('app-users')">
+                    <i class="metismenu-icon pe-7s-users"></i>
+                    App Users
+                </a>
             </li>
+
 
         </ul>
     </div>

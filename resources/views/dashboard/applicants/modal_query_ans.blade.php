@@ -1,5 +1,3 @@
-
-
 <?php foreach ($data as $singleData) { ?>
 <div class="form-row">
     <div class="col-md-12">
@@ -15,4 +13,3 @@ $Aid=$singleData->ApplicantId;
 $title='" REG-ID-'.$Aid.' => Interview Query Details"';
 echo "<script>$('#exampleModalLongTitle').text(".$title.");</script>";
 ?>
-

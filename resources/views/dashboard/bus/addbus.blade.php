@@ -267,7 +267,7 @@
                 $('#date_range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
                     'MMMM D, YYYY'));
                 var range = start.format("YYYY-MM-DD") + "~" + end.format("YYYY-MM-DD");
-                table.columns(7).search(range).draw();
+                table.columns(5).search(range).draw();
             }
 
             $('#date_range').daterangepicker({

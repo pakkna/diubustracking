@@ -2,7 +2,6 @@
 @section('Applications-ul', 'mm-show')
 @section('route-create', 'mm-active')
 @include('layouts.header')
-
 @include('layouts.sidebar')
 
 <div class="app-main__outer">
@@ -76,23 +75,85 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
-                                        <label class="input-label">Start Time Slot </label>
-                                        <input class="form-control" type="text" name="start_time_slot"
-                                            placeholder="Start Time Slot" value="{{ old('start_time_slot') }}">
+                                        <label class="input-label" for="start_slot">Start Time Slot <span
+                                                class="important text-danger">*</span></label>
+                                        <select id="start_slot" class="js-example-basic-multiple js-states form-control"
+                                            name="start_time_slot[]" multiple="multiple">
+                                            <option value="7.00 AM">7.00AM</option>
+                                            <option value="7.30 AM">7.30AM</option>
+                                            <option value="8.00 AM">8.00AM</option>
+                                            <option value="8.30 AM">8.30AM</option>
+                                            <option value="9.00 AM">9.00AM</option>
+                                            <option value="9.30 AM">9.30AM</option>
+                                            <option value="10.00 AM">10.00AM</option>
+                                            <option value="10.30 AM">10.30AM</option>
+                                            <option value="11.00 AM">11.00AM</option>
+                                            <option value="11.30 AM">11.30AM</option>
+                                            <option value="12.00 PM">12.00PM</option>
+                                            <option value="12.30 PM">12.30PM</option>
+                                            <option value="1.00 PM">1.00PM</option>
+                                            <option value="1.30 PM">1.30PM</option>
+                                            <option value="2.00 PM">2.00PM</option>
+                                            <option value="2.30 PM">2.30PM</option>
+                                            <option value="3.00 PM">3.00PM</option>
+                                            <option value="3.30 PM">3.30PM</option>
+                                            <option value="4.00 PM">4.00PM</option>
+                                            <option value="4.30 PM">4.30PM</option>
+                                            <option value="5.00 PM">5.00PM</option>
+                                            <option value="5.30 PM">5.30PM</option>
+                                            <option value="6.00 PM">6.00PM</option>
+                                            <option value="6.30 PM">6.30PM</option>
+                                            <option value="7.00 PM">7.00PM</option>
+                                            <option value="7.30 PM">7.30PM</option>
+                                            <option value="8.00 PM">8.00PM</option>
+                                            <option value="8.30 PM">8.30PM</option>
+                                            <option value="9.00 PM">9.00PM</option>
+                                            <option value="9.30 PM">9.30PM</option>
+                                        </select>
 
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
-                                        <label class="input-label">Departure Time Slot <span
-                                                class="important">*</span></label>
-                                        <input class="form-control" type="text" name="departure_time_slot"
-                                            placeholder="Departure Time Slot" value="{{ old('departure_time_slot') }}"
-                                            required>
+                                        <label class="input-label" for="dp_slot">Departure Time Slot <span
+                                                class="important text-danger">*</span></label>
+                                        <select id="dp_slot" class="js-example-basic-multiple js-states form-control"
+                                            name="departure_time_slot[]" multiple="multiple">
+                                            <option value="7.00 AM">7.00AM</option>
+                                            <option value="7.30 AM">7.30AM</option>
+                                            <option value="8.00 AM">8.00AM</option>
+                                            <option value="8.30 AM">8.30AM</option>
+                                            <option value="9.00 AM">9.00AM</option>
+                                            <option value="9.30 AM">9.30AM</option>
+                                            <option value="10.00 AM">10.00AM</option>
+                                            <option value="10.30 AM">10.30AM</option>
+                                            <option value="11.00 AM">11.00AM</option>
+                                            <option value="11.30 AM">11.30AM</option>
+                                            <option value="12.00 PM">12.00PM</option>
+                                            <option value="12.30 PM">12.30PM</option>
+                                            <option value="1.00 PM">1.00PM</option>
+                                            <option value="1.30 PM">1.30PM</option>
+                                            <option value="2.00 PM">2.00PM</option>
+                                            <option value="2.30 PM">2.30PM</option>
+                                            <option value="3.00 PM">3.00PM</option>
+                                            <option value="3.30 PM">3.30PM</option>
+                                            <option value="4.00 PM">4.00PM</option>
+                                            <option value="4.30 PM">4.30PM</option>
+                                            <option value="5.00 PM">5.00PM</option>
+                                            <option value="5.30 PM">5.30PM</option>
+                                            <option value="6.00 PM">6.00PM</option>
+                                            <option value="6.30 PM">6.30PM</option>
+                                            <option value="7.00 PM">7.00PM</option>
+                                            <option value="7.30 PM">7.30PM</option>
+                                            <option value="8.00 PM">8.00PM</option>
+                                            <option value="8.30 PM">8.30PM</option>
+                                            <option value="9.00 PM">9.00PM</option>
+                                            <option value="9.30 PM">9.30PM</option>
+                                        </select>
                                     </div>
                                     <div class="form-group form-line-height col-lg-4 col-md-12">
                                         <label class="input-label">Route Map Url <span
                                                 class="important text-danger">*</span></label>
                                         <input class="form-control" type="text" data-toggle="datepicker"
-                                            name="route_map_url " placeholder="Route Map Url"
+                                            name="route_map_url" placeholder="Route Map Url"
                                             value="{{ old('route_map_url') }}" required>
                                     </div>
 
@@ -123,5 +184,9 @@
 </div>
 
 </div>
-
+<script type="text/javascript">
+    $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+        });
+</script>
 @include('layouts.footer')

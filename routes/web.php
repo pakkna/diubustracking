@@ -45,4 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/route-create', [RouteController::class, 'route_create']);
     Route::post('/route-store', [RouteController::class, 'routeStore'])->name("route.store");
     Route::get('/route-list', [RouteController::class, 'routeList'])->name("route.list");
+    Route::post('/route-list-data', [RouteController::class, 'routeData'])->name("route.data");
+    Route::post('/route-info-get', [RouteController::class, 'routeInfoGet'])->name("route.info.get");
+    Route::get('/route-delete/{id}', [RouteController::class, 'routedelete'])->name("route.delete");
 });

@@ -12,16 +12,16 @@ class Route extends Model
     protected $table = 'route_list';
 
     protected $fillable = [
-        'driver_name',
-        'primary_contact',
-        'license_number',
-        'license_photo',
-        'address',
-        'date_of_birth',
-        'sex',
-        'nid_number',
-        'nid_photo',
-        'user_id',
-        'is_sign_in',
+        'route_name',
+        'route_code',
+        'route_details',
+        'start_time_slot',
+        'departure_time_slot',
+        'route_map_url'
+    ];
+
+    protected $casts = [
+        'created_at' => "datetime:Y-m-d\ h:i:s",
+        'updated_at' => "datetime:Y-m-d\ h:i:s"
     ];
 }

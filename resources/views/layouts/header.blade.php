@@ -23,11 +23,15 @@
     <link rel="icon" type="image/png" href="{!! asset('assets/images/favicon.png') !!}" sizes="16x16">
     <link rel="icon" type="image/png" href="{!! asset('assets/images/favicon.png') !!}" sizes="32x32">
     <link href="{!! asset('/main.css') !!}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+        integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     {{--
     <link href="{!! asset('/css/bootstrap-datetimepicker.min.css') !!}" rel="stylesheet" type="text/css"> --}}
     <link href="{!! asset('/css/daterangepicker.css') !!}" rel="stylesheet" type="text/css">
     <link href="{!! asset('/css/font-awesome.min.css') !!}" rel="stylesheet" type="text/css">
     <script src="{!! asset('js/jquery.min.js') !!}"></script>
+
 
     <!--  <script src="https://cdn.ckeditor.com/4.12.1/basic/ckeditor.js"></script> -->
     <style>
