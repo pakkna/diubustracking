@@ -14,7 +14,7 @@ class DriverController extends Controller
     public function registration_view()
     {
 
-        return view('dashboard.applicants.adddriver');
+        return view('dashboard.driver.adddriver');
     }
     public function driverStore(Request $request)
     {
@@ -107,7 +107,7 @@ class DriverController extends Controller
     {
         $allDrivers = User::getUserByType('Driver');
 
-        return view('dashboard.applicants.showdrivers', compact('allDrivers'));
+        return view('dashboard.driver.showdrivers', compact('allDrivers'));
     }
     public function driver_delete($user_id = null)
     {

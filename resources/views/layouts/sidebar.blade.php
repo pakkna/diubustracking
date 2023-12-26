@@ -25,16 +25,9 @@
             </li>
             <li class="app-sidebar__heading">Bus & Routes Info</li>
             <li>
-                <a href="{{URL('/pending-applicants-list')}}" aria-expanded="true"
-                    class="@yield('pending-applicants-list')">
-                    <i class="metismenu-icon pe-7s-next-2"></i>
-                    Register Daffodil Bus
-                </a>
-            </li>
-            <li>
-                <a href="{{URL('/applicants-shortlist')}}" aria-expanded="true" class="@yield('applicants-shortlist')">
+                <a href="{{URL('/bus-registration')}}" aria-expanded="true" class="@yield('bus-registration')">
                     <i class="metismenu-icon pe-7s-car"></i>
-                    Daffodil Bus List
+                    Bus Registration & List
                 </a>
             </li>
             <li>
@@ -63,7 +56,7 @@
                 <a href="{{URL('/pending-estimation-list')}}" aria-expanded="true"
                     class="@yield('pending-estimation-list')">
                     <i class="metismenu-icon pe-7s-note2"></i>
-                    Assing Bus Driver list
+                    Assingned Bus Driver list
                 </a>
 
             </li>

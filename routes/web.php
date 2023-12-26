@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\BackendControllers\DashboardController;
+use App\Http\Controllers\BackendControllers\BusController;
 use App\Http\Controllers\BackendControllers\DriverController;
+use App\Http\Controllers\BackendControllers\DashboardController;
 use App\Http\Controllers\BackendControllers\HireProcessController;
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +33,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/driver-store', [DriverController::class, 'driverStore'])->name("driver.store");
     Route::get('/registered-drivers', [DriverController::class, 'registered_drivers'])->name("driver.all");
     Route::get('/driver-delete/{user_id}', [DriverController::class, 'driver_delete'])->name("driver.delete");
+
+    // Bus Registration
+    Route::get('/bus-registration', [BusController::class, 'bus_registration_view']);
+    Route::post('/bus-store', [BusController::class, 'busStore'])->name("bus.store");
+    Route::post('/bus-list', [BusController::class, 'busList'])->name("bus.list");
+    Route::get('/bus-status/{status}/{id}', [BusController::class, 'busStatusChange'])->name("bus.status");
+    Route::get('/bus-delete/{id}', [BusController::class, 'busDelete'])->name("bus.delete");
 });

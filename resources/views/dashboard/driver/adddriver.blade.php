@@ -45,7 +45,7 @@
             <div class="col-md-12">
                 <div class="main-card mb-3 card">
 
-                    <form method="post" action="{{ route('driver.store') }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ route('bus.store') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         @include("layouts.includes.flash")
 
