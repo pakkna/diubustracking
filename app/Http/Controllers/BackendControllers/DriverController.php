@@ -6,6 +6,7 @@ use DB;
 use App\Models\User;
 use App\Models\Driver;
 use Illuminate\Http\Request;
+use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -37,7 +38,6 @@ class DriverController extends Controller
 
             try {
 
-                //DB::beginTransaction();
                 if ($request->hasFile('nid_image')) {
 
                     $image = $request->file('nid_image');
@@ -51,6 +51,7 @@ class DriverController extends Controller
                     $image_path = '/assets/images/avatars/driver_nid/demonidpic.jpg';
                 }
 
+                DB::beginTransaction();
 
                 $userData = [
                     'name' => $request->name,
@@ -87,7 +88,7 @@ class DriverController extends Controller
                     return redirect()->back()->withErrors("flashMessageDanger", "User Not Save");
                 }
 
-                //DB::commit();
+                DB::commit();
 
                 if ($request->hasFile('nid_image')) {
                     $image->move($destination_path, $name);
@@ -97,7 +98,7 @@ class DriverController extends Controller
 
                 return redirect()->back()->with("flashMessageSuccess", "Your Driver info Stored Succesfully");
             } catch (\Throwable $th) {
-                //DB::rollback();
+                DB::rollback();
 
                 return redirect()->back()->withErrors("flashMessageDanger", $th->getMessage());
             }
@@ -105,9 +106,48 @@ class DriverController extends Controller
     }
     public function registered_drivers()
     {
-        $allDrivers = User::getUserByType('Driver');
+        return view('dashboard.driver.showdrivers');
+    }
+    function registered_drivers_data(Request $request)
+    {
 
-        return view('dashboard.driver.showdrivers', compact('allDrivers'));
+        $date = $request->get('columns')[5]['search']['value'];
+
+        if ($date != '') {
+
+            list($start_date, $end_date) = explode('~', preg_replace('/\s+/', '', $date));
+
+            $start_date = date_validate($start_date);
+            $end_date = date_validate($end_date);
+        } else {
+
+            $time = strtotime(date('Y-m-d') . '-30 days');
+            $start_date = date_validate(date('Y-m-d', $time));
+            $end_date = date_validate(date('Y-m-d'));
+        }
+
+        $query  = User::join('driver_info', 'driver_info.user_id', 'users.id')
+            ->where('usertype', 'Driver')->get();
+
+        return Datatables::of($query)
+
+            ->addColumn('is_active', function ($result) {
+
+                if ($result->is_active == "Active") {
+                    return '<div class="badge badge-pill badge-success">' . $result->is_active . '</div>';
+                } else {
+                    return '<div class="badge badge-pill badge-danger">' . $result->is_active . '</div>';
+                }
+            })
+            ->addColumn('action', function ($result) {
+
+                return '<div role="group" class="btn-group-md btn-group text-white">
+                    <a href="/driver-delete/' . $result->id . '" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
+                    </div>';
+                /*  <a href="/route-update/' . $result->id . '"  class="btn-shadow btn btn-warning mr-3" title="Route Update"><i class="fa fa-edit"></i></a> */
+            })
+            ->rawColumns(['action', 'is_active'])
+            ->make(true);
     }
     public function driver_delete($user_id = null)
     {

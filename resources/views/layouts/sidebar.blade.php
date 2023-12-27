@@ -27,7 +27,7 @@
             <li>
                 <a href="{{URL('/bus-registration')}}" aria-expanded="true" class="@yield('bus-registration')">
                     <i class="metismenu-icon pe-7s-car"></i>
-                    Bus Registration & List
+                    Add Bus & List
                 </a>
             </li>
             <li>
@@ -46,44 +46,29 @@
             <li class="app-sidebar__heading">Assign Bus To Driver</li>
 
             <li>
-                <a href="{{URL('/assign-tasks-view')}}" aria-expanded="true" class="@yield('assign-tasks-view')">
+                <a href="{{URL('/assgin-bus')}}" aria-expanded="true" class="@yield('assgin-bus')">
                     <i class="metismenu-icon pe-7s-pin"></i>
                     Assign Bus To Driver
                 </a>
 
             </li>
             <li>
-                <a href="{{URL('/pending-estimation-list')}}" aria-expanded="true"
-                    class="@yield('pending-estimation-list')">
+                <a href="{{URL('/assign-route-list')}}" aria-expanded="true" class="@yield('assign-route-list')">
                     <i class="metismenu-icon pe-7s-note2"></i>
-                    Assingned Bus Driver list
+                    Assingned Route Bus list
                 </a>
 
             </li>
             <li>
-                <a href="{{URL('/completed-tasks')}}" aria-expanded="true" class="@yield('completed-task')">
+                <a href="{{URL('/unassign-bus-list')}}" aria-expanded="true" class="@yield('unassign-bus-list')">
                     <i class="metismenu-icon pe-7s-info"></i>
                     Unassign Bus List
                 </a>
 
             </li>
-            {{-- <li class="app-sidebar__heading">Bus Schedule Info</li>
-            <li>
-                <a href="{{URL('/expense-category-list')}}" aria-expanded="true"
-                    class="@yield('expense-category-list')">
-                    <i class="metismenu-icon pe-7s-alarm"></i>
-                    Add Bus Time Schedule
-                </a>
-            </li>
-            <li>
-                <a href="{{URL('/expense-list-view')}}" aria-expanded="true" class="@yield('expense-list-view')">
-                    <i class="metismenu-icon pe-7s-tools"></i>
-                    Show All Time Schedules
-                </a>
-            </li> --}}
             <li class="app-sidebar__heading">App User Info</li>
             <li>
-                <a href="{{URL('/app-users')}}" aria-expanded="true" class="@yield('app-users')">
+                <a href="{{URL('/registered-app-users')}}" aria-expanded="true" class="@yield('registered-app-users')">
                     <i class="metismenu-icon pe-7s-users"></i>
                     App Users
                 </a>

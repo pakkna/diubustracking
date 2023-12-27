@@ -3,11 +3,7 @@
 
 namespace App\Http\Controllers\BackendControllers;
 
-use DB;
-use App\Models\Bus;
-use App\Models\User;
 use App\Models\Route;
-use App\Models\Driver;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;

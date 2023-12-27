@@ -1,160 +1,115 @@
-@section('route-list', 'mm-active')
 @section('Applications-li', 'mm-active')
 @section('Applications-ul', 'mm-show')
+@section('unassign-bus-list', 'mm-active')
 @include('layouts.header')
 
 @include('layouts.sidebar')
-<script type="text/javascript">
-    function get_modal_html(params) {
-            $.post('{{ route('route.info.get') }}', {_token:'{{ csrf_token() }}', id:params}, function(data){
-                $('#model_body').empty();
-                $('#model_body').html(data);
-            });
-    }
-    function go_map(params) {
 
-        let settings = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
-        width=800,height=600,left=100,top=100`;
-        if (params.indexOf('http') > -1) {
-            open(params, 'test',settings);
-        }else{
-            alert("Map Url Is Not Valid !");
-        }
-
-    }
-</script>
 <!-- Dashboard Header  section -->
-
 <div class="app-main__outer">
-
     <div class="app-main__inner">
-
         <div class="app-page-title app-page-title-simple">
-
             <div class="page-title-wrapper">
-
                 <div class="page-title-heading">
-
                     <div>
-
                         <div class="page-title-head center-elem">
-
                             <span class="d-inline-block pr-2">
-
-                                <i class="lnr-users opacity-6"></i>
-
+                                <i class="lnr-car opacity-6"></i>
                             </span>
-
-                            <span class="d-inline-block">Bus Route List</span>
-
+                            <span class="d-inline-block"> Unassign Bus List</span>
                         </div>
-
                         <div class="page-title-subheading opacity-10">
-
                             <nav class="" aria-label="breadcrumb">
-
                                 <ol class="breadcrumb">
-
                                     <li class="breadcrumb-item">
-
                                         <a>
-
                                             <i aria-hidden="true" class="fa fa-home"></i>
-
                                         </a>
-
                                     </li>
-
                                     <li class="breadcrumb-item">
-
                                         <a>Dashboards</a>
-
                                     </li>
-
                                     <li class="active breadcrumb-item" aria-current="page">
-
-                                        Route List
-
+                                        Unassign Bus List
                                     </li>
-
                                 </ol>
-
                             </nav>
-
                         </div>
-
                     </div>
-
                 </div>
-
-
-
             </div>
-
         </div>
-
-
-
-        <!-- table Section -->
-
-        <div class="mbg-3 h-auto pl-0 pr-0 bg-transparent no-border card-header">
-
-            <div class="card-header-title fsize-5 text-capitalize font-weight-normal"></div>
-
-        </div>
-
-
 
         @include("layouts.includes.flash")
 
         <div class="main-card mb-3 card">
-            <div class="card-body">
-
-                <table style="width: 100%;" id="process_data_table"
-                    class="table table-hover table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Route Name</th>
-                            <th>Route Number</th>
-                            <th>Start Time</th>
-                            <th>Departure Time</th>
-                            <th>Route Details</th>
-                            <th>Route Map</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                </table>
-                <div class="d-felx justify-content-center pull-right">
-                    {{-- {{ $allDrivers->links('pagination::bootstrap-4') }} --}}
+            <form method="post" action="" enctype="multipart/form-data">
+                {{ csrf_field() }}
+                <div class="card-body">
+                    <table style="width: 100%;" id="process_data_table"
+                        class="table table-hover table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Bus Id</th>
+                                <th>Bus name</th>
+                                <th>Bus Number</th>
+                                <th>Permit Status</th>
+                                <th>Assign Status</th>
+                                <th>Registered Date</th>
+                                <th>
+                                    <center>Action</center>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
-
-            </div>
+            </form>
         </div>
 
+        <script>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            function ajaxApprove(id, the, action) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Do you want to Delete this Expense Info ?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, keep it'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '',
+                            type: 'post',
+                            data: {
+                                id: id,
+                                type: action
+                            },
+                            dataType: 'json',
+                            success: function(response) {
+                                Swal.fire(response.title, response.msg , response.alert);
+                                location.reload();
+                            }
+                        });
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        Swal.fire(
+                            'Cancelled',
+                            'Your imaginary file is safe.',
+                            'error'
+                        )
+                    }
+                });
+            }
+        </script>
     </div>
-
 </div>
+
 @include('layouts.footer')
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Bus Route Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="model_body">
 
-
-            </div>
-            <div class="modal-footer" style="display: flex;">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
 <script type="text/javascript">
     $(document).ready(function() {
         var table =
@@ -170,7 +125,7 @@
             autoWidth: false,
             dom: 'l<"#date-filter">frtip',
             ajax: {
-                url: '{{ route("route.data")}}',
+                url: '{{ route("uassign.bus.data")}}',
                 type: 'POST',
                 data: function(d) {
                     d._token = "{{ csrf_token() }}";
@@ -178,34 +133,45 @@
             },
             columns: [
                 {
-                    data: 'route_name',
-                    name: 'route_name',
+                    data: 'id',
+                    name: 'id',
+                    searchable: true,
+                    render(data, type, row) {
+                        return "Bus-"+row.id;
+                    },
+
+                },
+                {
+                    data: 'bus_name',
+                    name: 'bus_name',
                     searchable: true
                 },
                 {
-                    data: 'route_code',
-                    name: 'route_code',
+                    data: 'bus_name',
+                    name: 'bus_name',
                     searchable: true,
                 },
                 {
-                    data: 'start_time_slot',
-                    name: 'start_time_slot',
-                    searchable: true,
+                    data: 'is_active',
+                    name: 'is_active',
+                    searchable: false,
                 },
                 {
-                    data: 'departure_time_slot',
-                    name: 'departure_time_slot',
-                    searchable: true,
+                    data: 'status',
+                    name: 'status',
+                    searchable: false,
                 },
                 {
-                    data: 'route_details',
-                    name: 'route_details',
-                    searchable: true,
-                },
-                {
-                    data: 'route_map_url',
-                    name: 'route_map_url',
-                    searchable: true,
+
+                    data: 'created_at',
+                    name: 'created_at',
+                    searchable: false,
+
+                    render: function(data, type, row) {
+
+                        return moment(row.created_at).format("Do MMMM YYYY");
+                    }
+
                 },
                 {
                     data: 'action',
@@ -253,6 +219,5 @@
             $('#date_range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
                 'MMMM D, YYYY'));
         });
-
     });
 </script>

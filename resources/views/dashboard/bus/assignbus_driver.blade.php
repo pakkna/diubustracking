@@ -1,10 +1,22 @@
 @section('Applications-li', 'mm-active')
 @section('Applications-ul', 'mm-show')
-@section('bus-registration', 'mm-active')
+@section('assgin-bus', 'mm-active')
 @include('layouts.header')
 
 @include('layouts.sidebar')
+<style type="text/css">
+    .select2-selection__rendered {
+        line-height: 35px !important;
+    }
 
+    .select2-container .select2-selection--single {
+        height: 36px !important;
+    }
+
+    .select2-selection__arrow {
+        height: 38px !important;
+    }
+</style>
 <!-- Dashboard Header  section -->
 <div class="app-main__outer">
     <div class="app-main__inner">
@@ -16,7 +28,7 @@
                             <span class="d-inline-block pr-2">
                                 <i class="lnr-car opacity-6"></i>
                             </span>
-                            <span class="d-inline-block"> Bus Registration & Bus List</span>
+                            <span class="d-inline-block"> Bus Driver & Route Assign</span>
                         </div>
                         <div class="page-title-subheading opacity-10">
                             <nav class="" aria-label="breadcrumb">
@@ -30,7 +42,7 @@
                                         <a>Dashboards</a>
                                     </li>
                                     <li class="active breadcrumb-item" aria-current="page">
-                                        Bus Registration & Bus List
+                                        Bus Driver & Route Assign
                                     </li>
                                 </ol>
                             </nav>
@@ -39,56 +51,66 @@
                 </div>
             </div>
         </div>
-
-        <button class="btn btn-primary btn-lg" id="add_expense_open">
-            <span class="mr-2 opacity-7">
-                <i class="fa fa-plus"></i>
-            </span>
-            <span class="mr-1 ">Bus Registration</span>
-        </button>
-        <br /><br />
-        @include("layouts.includes.flash")
         <!-- Dashboard Row section  -->
-        <div class="row" id="add_expense_form_view" style="display:none">
+        @include("layouts.includes.flash")
+        <div class="row">
             <div class="col-md-12">
 
-                <!-- <div class="alert alert-success alert-dismissible">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Success!</strong> Indicates a successful or positive action.
-            </div> -->
                 <div id="expense_details_msg"></div>
 
                 <div class="main-card mb-3 card">
 
-                    <form method="post" action="{{ route('bus.store') }}" enctype="multipart/form-data">
+                    <form method="post" action="{{ route('bus.assign') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
                         <button type="button" class="close" aria-label="Close"><span aria-hidden="true"
-                                style="font-weight: bold;" id="add_expense_close">&times;</span></button>
+                                style="font-weight: bold;">&times;</span></button>
                         <div class="card-body ">
 
                             <div class="section">
-                                <h5 class="card-title" style="margin-top: 7px;">Fill Up Bus
-                                    Details : </h5>
+                                <h5 class="card-title" style="margin-top: 7px;">Select Assign Bus Route & Driver: </h5>
                                 <div class="form-row">
                                     <div class="form-group form-line-height col-lg-3 col-md-12">
-                                        <label class="input-label">Bus Name <span
+                                        <label class="input-label" for="bus">Bus Name <span
                                                 class="important text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="bus_name" placeholder="Bus Name"
-                                            value="{{ old('bus_name') }}" required>
+                                        <select id="bus" class="js-example-basic-single js-states form-control"
+                                            name="bus_id">
+                                            <option value="">Select A Bus</option>
+                                            @foreach ($busList as $bus)
+                                            <option value="{{ $bus->id}}">{{ $bus->bus_name }} ({{ $bus->bus_number }})
+                                            </option>
+                                            @endforeach
+
+                                        </select>
 
                                     </div>
                                     <div class="form-group form-line-height col-lg-3 col-md-12">
-                                        <label class="input-label">Bus Number <span
-                                                class="important text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="bus_number"
-                                            placeholder="Bus Number " value="{{ old('bus_number') }}" required>
+                                        <label class="input-label" for="driver">Driver Name <span
+                                                class="important text-danger">*</span>
+                                        </label>
+
+                                        <select id="driver" class="js-example-basic-single js-states form-control"
+                                            name="driver_user_id">
+                                            <option value="">Select A Driver</option>
+                                            @foreach ($driver_list as $driver)
+                                            <option value="{{ $driver->id}}">{{ $driver->name }} ({{ $driver->mobile }})
+                                            </option>
+                                            @endforeach
+
+                                        </select>
                                     </div>
                                     <div class="form-group form-line-height col-lg-3 col-md-12">
-                                        <label class="input-label">Permit Status <span
-                                                class="important text-danger">*</span></label>
-                                        <select class="form-control" name="is_active">
-                                            <option value="Active" selected>Active</option>
-                                            <option value="InActive">InActive</option>
+                                        <label class="input-label" for="route">Route Name <span
+                                                class="important text-danger">*</span>
+                                        </label>
+
+                                        <select id="route" class="js-example-basic-single js-states form-control"
+                                            name="route_id">
+                                            <option value="">Select Your Route</option>
+                                            @foreach ($routeList as $route)
+                                            <option value="{{ $route->id}}">{{ $route->route_name }} ({{
+                                                $route->route_code }})
+                                            </option>
+                                            @endforeach
 
                                         </select>
                                     </div>
@@ -101,10 +123,13 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <h6 class="page-header text-primary">Note: Please reassign the bus after deleting the assign
+                                driver !
+                            </h6>
                         </div>
                     </form>
                 </div>
+
             </div>
         </div>
 
@@ -114,26 +139,25 @@
         </div> -->
 
         <div class="main-card mb-3 card">
-            <form method="post" action="" enctype="multipart/form-data">
-                {{ csrf_field() }}
-                <div class="card-body">
-                    <table style="width: 100%;" id="process_data_table"
-                        class="table table-hover table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Bus Id</th>
-                                <th>Bus name</th>
-                                <th>Bus Number</th>
-                                <th>Permit Status</th>
-                                <th>Registered Date</th>
-                                <th>
-                                    <center>Action</center>
-                                </th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </form>
+            <div class="card-body">
+                <table style="width: 100%;" id="process_data_table"
+                    class="table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Bus Name</th>
+                            <th>Bus Number</th>
+                            <th>Driver Name</th>
+                            <th>Driver Mobile</th>
+                            <th>Route Name</th>
+                            <th>Route Code</th>
+                            <th>Assigned Date</th>
+                            <th>
+                                <center>Action</center>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
 
         <script>
@@ -179,7 +203,11 @@
 </div>
 
 @include('layouts.footer')
-
+<script type="text/javascript">
+    $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
         var table =
@@ -195,7 +223,7 @@
             autoWidth: false,
             dom: 'l<"#date-filter">frtip',
             ajax: {
-                url: '{{ route("bus.list")}}',
+                url: '{{ route("assign.bus.data")}}',
                 type: 'POST',
                 data: function(d) {
                     d._token = "{{ csrf_token() }}";
@@ -203,33 +231,42 @@
             },
             columns: [
                 {
-                    data: 'id',
-                    name: 'id',
-                    searchable: true,
-                    render(data, type, row) {
-                        return "Bus-"+row.id;
-                    },
+                    data: 'bus_name',
+                    name: 'bus_name',
+                    searchable: false,
 
                 },
                 {
-                    data: 'bus_name',
-                    name: 'bus_name',
-                    searchable: true
-                },
-                {
-                    data: 'bus_name',
-                    name: 'bus_name',
+                    data: 'bus_number',
+                    name: 'bus_number',
                     searchable: true,
                 },
                 {
-                    data: 'is_active',
-                    name: 'is_active',
+                    data: 'name',
+                    name: 'name',
+                    searchable: true,
+                },
+                {
+                    data: 'mobile',
+                    name: 'mobile',
+                    searchable: true,
+
+                },
+                {
+                    data: 'route_name',
+                    name: 'route_name',
                     searchable: false,
                 },
                 {
-
+                    data: 'route_code',
+                    name: 'route_code',
+                    searchable: false,
+                },
+                {
                     data: 'created_at',
+
                     name: 'created_at',
+
                     searchable: false,
 
                     render: function(data, type, row) {

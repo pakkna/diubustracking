@@ -185,16 +185,13 @@
                         class="table table-hover table-striped table-bordered">
 
                         <thead>
-
-                            <tr>
-                                <th>Bus Name</th>
-                                <th>Bus Number</th>
-                                <th>Departure Time</th>
-                                <th>Arrival Time</th>
-                                <th>Route Details</th>
-                                <th>Schedule Status</th>
-                            </tr>
-
+                            <th>Bus Name</th>
+                            <th>Driver Name</th>
+                            <th>Route Name</th>
+                            <th>Start Time</th>
+                            <th>Departure Time</th>
+                            <th>Route Map</th>
+                            <th>Created At</th>
                         </thead>
                         <tbody>
                             <tr>
@@ -246,10 +243,10 @@
             <div class="d-block p-4 text-center card-footer">
 
                 <a class="btn-pill btn-shadow btn-wide fsize-1 btn btn-dark btn-lg"
-                    href="{{url('/assign-tasks-view')}}">
+                    href="{{url('/assign-route-list')}}">
                     <span class="mr-2 opacity-7"><i class="fa fa-cog fa-spin"></i>
                     </span>
-                    <span class="mr-1">View Schedule Details</span>
+                    <span class="mr-1">Assigned Bus Route Schedules</span>
                 </a>
 
             </div>
@@ -261,238 +258,128 @@
 </div>
 
 @include('layouts.footer')
-
-<!-- Modal Section -->
-<div class="modal fade bd-example-modal-lg" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modal_header">Order Item Details :</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="model_body">
-
-
-            </div>
-            <div class="modal-footer" style="display: flex;">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-{{-- <script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function() {
-
-        var table =
+            var table =
             $('#process_data_table').DataTable({
-
-
                 processing: false,
-
                 serverSide: true,
-
                 paging: true,
-
                 pageLength: 10,
-
                 lengthChange: true,
-
                 searching: true,
-
                 ordering: true,
-
                 info: true,
-
                 autoWidth: false,
-
                 dom: 'l<"#date-filter">frtip',
-
                 ajax: {
-
-                    url: '{{ route("pending-estimation-data") }}',
-
+                    url: '{{ route("assign.route.data")}}',
                     type: 'POST',
-
                     data: function(d) {
-
                         d._token = "{{ csrf_token() }}";
-
                     }
-
                 },
-
                 columns: [
-
                     {
-
-                        data: 'OrderNumber',
-
-                        name: 'OrderNumber',
-
-                        searchable: true
-
-                    },
-                    {
-
-                        data: 'UserName',
-
-                        name: 'UserName',
-
-                        searchable: true,
-
-                    },
-                    {
-
-                        data: 'Phone',
-
-                        name: 'Phone',
-
-                        searchable: true,
-
-
-
-                    },
-                    {
-
-                        data: 'OrderDate',
-
-                        name: 'OrderDate',
-
+                        data: 'bus_name',
+                        name: 'bus_name',
                         searchable: false,
-
                         render: function(data, type, row) {
-
-                            return moment(row.OrderDate).format("Do MMMM YYYY");
+                            return row.bus_name+' ('+row.bus_number+')';
                         }
 
                     },
 
                     {
+                        data: 'name',
+                        name: 'name',
+                        searchable: false,
 
-                        data: 'TotalItem',
-
-                        name: 'TotalItem',
-
-                        searchable: true,
-
+                        render: function(data, type, row) {
+                            return row.name+' ('+row.mobile+')';
+                        }
                     },
                     {
-
-                        data: 'TotalRate',
-
-                        name: 'TotalRate',
-
-                        searchable: true,
-
+                        data: 'route_name',
+                        name: 'route_name',
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return row.route_name+' ('+row.route_code+')';
+                        }
                     },
                     {
+                        data: 'start_time_slot',
+                        name: 'start_time_slot',
+                        searchable: false,
+                    },
+                    {
+                        data: 'departure_time_slot',
+                        name: 'departure_time_slot',
+                        searchable: false,
+                    },
+                    {
+                        data: 'route_map_url',
+                        name: 'route_map_url',
+                        searchable: false,
+                    },
+                    {
+                        data: 'created_at',
 
-                        data: 'TotalShedule',
-
-                        name: 'TotalShedule',
+                        name: 'created_at',
 
                         searchable: false,
 
-                    },
-                    {
+                        render: function(data, type, row) {
 
-                        data: 'Status',
-
-                        name: 'Status',
-
-                        searchable: false,
-
+                            return moment(row.created_at).format("Do MMMM YYYY");
+                        }
 
                     },
                     {
-
                         data: 'action',
-
                         name: 'action',
-
                         searchable: false,
-
-                    },
-
+                    }
                 ]
-
             });
 
+            $("table").wrapAll("<div style='overflow-x:auto;width:100%' />");
+            $('.dataTables_wrapper').addClass('row');
+            $('#process_data_table_length').addClass('col-lg-3 col-md-3 col-sm-3');
+            $('#process_data_table_length select').addClass('custom-select custom-select-sm form-control form-control-sm');
+            $('#date-filter').addClass('col-lg-4 col-md-4 col-sm-4 adjust');
+            $('#process_data_table_filter').addClass('offset-2 col-md-2 col-sm-2');
+            $('#process_data_table_filter input').addClass('form-control form-control-sm');
 
-        $("table").wrapAll("<div style='overflow-x:auto;width:100%' />");
+            var date_picker_html = '<div id="date_range" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;"> <i class="fa fa-calendar"> </i>&nbsp; <span> </span> <i class="fa fa-caret-down"></i></div>';
+            $('#date-filter').append(date_picker_html);
 
-        $('.dataTables_wrapper').addClass('row');
-
-        // $('.dataTables_processing').addClass('m-loader m-loader--brand');
-
-        $('#process_data_table_length').addClass('col-lg-3 col-md-3 col-sm-3');
-
-        $('#process_data_table_length select').addClass('custom-select custom-select-sm form-control form-control-sm');
-
-        $('#date-filter').addClass('col-lg-4 col-md-4 col-sm-4 adjust');
-
-        $('#process_data_table_filter').addClass('offset-2 col-md-2 col-sm-2');
-
-        $('#process_data_table_filter input').addClass('form-control form-control-sm');
-
-
-
-        var date_picker_html = '<div id="date_range" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;"> <i class="fa fa-calendar"> </i>&nbsp; <span> </span> <i class="fa fa-caret-down"></i></div>';
-
-        $('#date-filter').append(date_picker_html);
-
-        $(function() {
-
-            var start = moment().subtract(29, 'days');
-            var end = moment();
-
-            function cb(start, end) {
-
-                $('#date_range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-
-                var range = start.format("YYYY-MM-DD") + "~" + end.format("YYYY-MM-DD");
-
-                table.columns(7).search(range).draw();
-
-                //alert(range);
-            }
-
-            $('#date_range').daterangepicker({
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            $(function() {
+                var start = moment().subtract(29, 'days');
+                var end = moment();
+                function cb(start, end) {
+                    $('#date_range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
+                        'MMMM D, YYYY'));
+                    var range = start.format("YYYY-MM-DD") + "~" + end.format("YYYY-MM-DD");
+                    table.columns(5).search(range).draw();
                 }
-            }, cb);
 
-            $('#date_range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-
+                $('#date_range').daterangepicker({
+                    startDate: start,
+                    endDate: end,
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment()
+                            .subtract(1, 'month').endOf('month')
+                        ]
+                    }
+                }, cb);
+                $('#date_range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
+                    'MMMM D, YYYY'));
+            });
         });
-
-    });
-
-    function get_item_detsils_html(params) {
-            $.post('{{ route('orderItem.list') }}', {_token:'{{ csrf_token() }}', id:params}, function(data){
-                $('#model_body').empty();
-                $('#model_body').html(data);
-            });
-    }
-    function get_shedule_html(params) {
-            $.post('{{ route('orderShedule.list') }}', {_token:'{{ csrf_token() }}', id:params}, function(data){
-                $('#model_body').empty();
-                $('#model_body').html(data);
-            });
-    }
-
 </script>
---}}

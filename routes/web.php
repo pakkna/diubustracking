@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\BackendControllers\RouteController;
 use App\Http\Controllers\BackendControllers\BusController;
+use App\Http\Controllers\BackendControllers\UserController;
+use App\Http\Controllers\BackendControllers\RouteController;
 use App\Http\Controllers\BackendControllers\DriverController;
 use App\Http\Controllers\BackendControllers\DashboardController;
 /*
@@ -24,14 +25,16 @@ Route::get('/', function () {
 Auth::routes(['register' => false]);
 
 Route::group(['middleware' => 'auth'], function () {
-    //Dashboard Routes
+    //Cache Clear
     Route::get('clear', [DashboardController::class, 'all_clear']);
+    //Dashboard Routes
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //Driver Registration
     Route::get('/driver-registration', [DriverController::class, 'registration_view']);
     Route::post('/driver-store', [DriverController::class, 'driverStore'])->name("driver.store");
     Route::get('/registered-drivers', [DriverController::class, 'registered_drivers'])->name("driver.all");
+    Route::post('/registered-drivers-data', [DriverController::class, 'registered_drivers_data'])->name("driver.data");
     Route::get('/driver-delete/{user_id}', [DriverController::class, 'driver_delete'])->name("driver.delete");
 
     // Bus Registration
@@ -48,4 +51,20 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/route-list-data', [RouteController::class, 'routeData'])->name("route.data");
     Route::post('/route-info-get', [RouteController::class, 'routeInfoGet'])->name("route.info.get");
     Route::get('/route-delete/{id}', [RouteController::class, 'routedelete'])->name("route.delete");
+
+    //Assign Bus to Route and Driver
+    Route::get('/assgin-bus', [BusController::class, 'busAssignToRoute']);
+    Route::post('/assign-bus-store', [BusController::class, 'assign_bus_store'])->name("bus.assign");
+    Route::post('/assign-bus-list', [BusController::class, 'assign_bus_data'])->name("assign.bus.data");
+    Route::get('/assign-route-list', [BusController::class, 'AssignBusRouteList']);
+    Route::post('/assign-route-data', [BusController::class, 'AssignBusRouteListData'])->name("assign.route.data");
+
+    //Unassign bus list
+    Route::get('/unassign-bus-list', [BusController::class, 'unassign_bus_list']);
+    Route::post('/unassign-bus-data', [BusController::class, 'unassign_bus_data'])->name("uassign.bus.data");
+
+    //Registered App Users
+    //Unassign bus list
+    Route::get('/registered-app-users', [UserController::class, 'registered_app_users']);
+    Route::post('/registered-app-users-data', [UserController::class, 'app_users_data'])->name("app.users.data");
 });

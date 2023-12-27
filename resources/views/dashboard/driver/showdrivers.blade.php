@@ -96,7 +96,6 @@
                     class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>Driver Code</th>
                             <th>Driver Name</th>
                             <th>Email </th>
                             <th>Mobile</th>
@@ -105,7 +104,7 @@
                             <th>Nid Number</th>
                             <th>Date Of Birth</th>
                             <th>Status</th>
-                            <th>Created At</th>
+                            <th>Regisetred Date</th>
                             <th>
                                 <center>Action</center>
                             </th>
@@ -113,41 +112,15 @@
 
                     </thead>
                     <tbody>
-                        @foreach ($allDrivers as $singledriver)
-
-                        <tr>
-                            <td>D-{{ $singledriver->driver->id }}</td>
-                            <td>{{ $singledriver->name }}</td>
-                            <td>{{ $singledriver->email }}</td>
-                            <td>{{ $singledriver->mobile }}</td>
-                            <td>{{ $singledriver->driver->address??'None' }}</td>
-                            <td>{{ $singledriver->driver->license_number??'None' }}</td>
-                            <td>{{ $singledriver->driver->nid_number }}</td>
-                            <td>{{ $singledriver->driver->date_of_birth }}</td>
-                            <td>{{ $singledriver->is_active }}</td>
-                            <td>{{ $singledriver->created_at}}</td>
-                            <td>{{-- <a href="javascript:void(0);" class="btn-shadow btn btn-sm btn-warning" title=""><i
-                                        class="fa fa-edit"></i></a> --}}
-                                <a href="/driver-delete/{{$singledriver->id }}" class="btn-shadow btn btn-danger"
-                                    title="Driver Remove"><i class="fa fa-trash"></i></a>
+                    </tbody>
+                </table>
             </div>
-            </td>
-            </tr>
-
-            @endforeach
-            </tbody>
-            </table>
-            <div class="d-felx justify-content-center pull-right">
-                {{ $allDrivers->links('pagination::bootstrap-4') }}
-            </div>
-
         </div>
+
     </div>
 
 </div>
-
-</div>
-{{-- <script>
+<script>
     $.ajaxSetup({
 
         headers: {
@@ -171,7 +144,7 @@
 
                             $.ajax({
 
-                                url: '{{ route('applicant-action') }}',
+                                url: '',
                                 type: 'post',
                                 data: {
                                     id: id,
@@ -241,7 +214,7 @@
 
                 ajax: {
 
-                    url: '{{ route("hired-employee-data") }}',
+                    url: '{{ route("driver.data") }}',
 
                     type: 'POST',
 
@@ -257,9 +230,9 @@
 
                     {
 
-                        data: 'EmpCode',
+                        data: 'name',
 
-                        name: 'EmpCode',
+                        name: 'name',
 
                         searchable: true,
 
@@ -267,36 +240,36 @@
 
                     {
 
-                        data: 'IDCardNumber',
+                        data: 'email',
 
-                        name: 'IDCardNumber',
+                        name: 'email',
 
                         searchable: true
 
                     },
                     {
 
-                        data: 'FullName',
+                        data: 'mobile',
 
-                        name: 'FullName',
+                        name: 'mobile',
 
                         searchable: true
 
                     },
                     {
 
-                        data: 'Email',
+                        data: 'address',
 
-                        name: 'Email',
+                        name: 'address',
 
                         searchable: true,
 
                     },
                     {
 
-                        data: 'PresentAddress',
+                        data: 'license_number',
 
-                        name: 'PresentAddress',
+                        name: 'license_number',
 
                         searchable: true
 
@@ -304,27 +277,41 @@
 
                     {
 
-                        data: 'Phone',
+                        data: 'nid_number',
 
-                        name: 'Phone',
+                        name: 'nid_number',
 
                         searchable: true,
 
                     },
                     {
 
-                        data: 'status',
+                        data: 'date_of_birth',
 
-                        name: 'status',
+                        name: 'date_of_birth',
+
+                        searchable: false,
+
+                        render: function(data, type, row) {
+
+                            return moment(row.date_of_birth).format("MMMM Do YYYY");
+                        }
+
+                    },
+                    {
+
+                        data: 'is_active',
+
+                        name: 'is_active',
 
                         searchable: false,
 
                     },
                     {
 
-                        data: 'DateCreated',
+                        data: 'created_at',
 
-                        name: 'DateCreated',
+                        name: 'created_at',
 
                         searchable: false,
 

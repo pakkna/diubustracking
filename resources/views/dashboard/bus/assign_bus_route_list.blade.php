@@ -1,18 +1,11 @@
-@section('route-list', 'mm-active')
 @section('Applications-li', 'mm-active')
 @section('Applications-ul', 'mm-show')
+@section('assign-route-list', 'mm-active')
 @include('layouts.header')
 
 @include('layouts.sidebar')
 <script type="text/javascript">
-    function get_modal_html(params) {
-            $.post('{{ route('route.info.get') }}', {_token:'{{ csrf_token() }}', id:params}, function(data){
-                $('#model_body').empty();
-                $('#model_body').html(data);
-            });
-    }
     function go_map(params) {
-
         let settings = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
         width=800,height=600,left=100,top=100`;
         if (params.indexOf('http') > -1) {
@@ -24,137 +17,71 @@
     }
 </script>
 <!-- Dashboard Header  section -->
-
 <div class="app-main__outer">
-
     <div class="app-main__inner">
-
         <div class="app-page-title app-page-title-simple">
-
             <div class="page-title-wrapper">
-
                 <div class="page-title-heading">
-
                     <div>
-
                         <div class="page-title-head center-elem">
-
                             <span class="d-inline-block pr-2">
-
-                                <i class="lnr-users opacity-6"></i>
-
+                                <i class="lnr-car opacity-6"></i>
                             </span>
-
-                            <span class="d-inline-block">Bus Route List</span>
-
+                            <span class="d-inline-block"> Assigned Bus Routes </span>
                         </div>
-
                         <div class="page-title-subheading opacity-10">
-
                             <nav class="" aria-label="breadcrumb">
-
                                 <ol class="breadcrumb">
-
                                     <li class="breadcrumb-item">
-
                                         <a>
-
                                             <i aria-hidden="true" class="fa fa-home"></i>
-
                                         </a>
-
                                     </li>
-
                                     <li class="breadcrumb-item">
-
                                         <a>Dashboards</a>
-
                                     </li>
-
                                     <li class="active breadcrumb-item" aria-current="page">
-
-                                        Route List
-
+                                        Assigned Bus Routes
                                     </li>
-
                                 </ol>
-
                             </nav>
-
                         </div>
-
                     </div>
-
                 </div>
-
-
-
             </div>
-
         </div>
 
-
-
-        <!-- table Section -->
-
-        <div class="mbg-3 h-auto pl-0 pr-0 bg-transparent no-border card-header">
-
-            <div class="card-header-title fsize-5 text-capitalize font-weight-normal"></div>
-
-        </div>
-
-
-
-        @include("layouts.includes.flash")
 
         <div class="main-card mb-3 card">
             <div class="card-body">
-
                 <table style="width: 100%;" id="process_data_table"
                     class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
+                            <th>Bus Name</th>
+                            <th>Driver Name</th>
                             <th>Route Name</th>
-                            <th>Route Number</th>
                             <th>Start Time</th>
                             <th>Departure Time</th>
-                            <th>Route Details</th>
                             <th>Route Map</th>
-                            <th>Action</th>
+                            <th>Assigned Date</th>
+                            <th>
+                                <center>Action</center>
+                            </th>
                         </tr>
                     </thead>
                 </table>
-                <div class="d-felx justify-content-center pull-right">
-                    {{-- {{ $allDrivers->links('pagination::bootstrap-4') }} --}}
-                </div>
-
             </div>
         </div>
-
     </div>
-
 </div>
+
 @include('layouts.footer')
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Bus Route Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="model_body">
-
-
-            </div>
-            <div class="modal-footer" style="display: flex;">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
         var table =
@@ -170,7 +97,7 @@
             autoWidth: false,
             dom: 'l<"#date-filter">frtip',
             ajax: {
-                url: '{{ route("route.data")}}',
+                url: '{{ route("assign.route.data")}}',
                 type: 'POST',
                 data: function(d) {
                     d._token = "{{ csrf_token() }}";
@@ -178,34 +105,59 @@
             },
             columns: [
                 {
-                    data: 'route_name',
-                    name: 'route_name',
-                    searchable: true
+                    data: 'bus_name',
+                    name: 'bus_name',
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return row.bus_name+' ('+row.bus_number+')';
+                    }
+
+                },
+
+                {
+                    data: 'name',
+                    name: 'name',
+                    searchable: false,
+
+                    render: function(data, type, row) {
+                        return row.name+' ('+row.mobile+')';
+                    }
                 },
                 {
-                    data: 'route_code',
-                    name: 'route_code',
-                    searchable: true,
+                    data: 'route_name',
+                    name: 'route_name',
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return row.route_name+' ('+row.route_code+')';
+                    }
                 },
                 {
                     data: 'start_time_slot',
                     name: 'start_time_slot',
-                    searchable: true,
+                    searchable: false,
                 },
                 {
                     data: 'departure_time_slot',
                     name: 'departure_time_slot',
-                    searchable: true,
-                },
-                {
-                    data: 'route_details',
-                    name: 'route_details',
-                    searchable: true,
+                    searchable: false,
                 },
                 {
                     data: 'route_map_url',
                     name: 'route_map_url',
-                    searchable: true,
+                    searchable: false,
+                },
+                {
+                    data: 'created_at',
+
+                    name: 'created_at',
+
+                    searchable: false,
+
+                    render: function(data, type, row) {
+
+                        return moment(row.created_at).format("Do MMMM YYYY");
+                    }
+
                 },
                 {
                     data: 'action',
@@ -253,6 +205,5 @@
             $('#date_range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
                 'MMMM D, YYYY'));
         });
-
     });
 </script>

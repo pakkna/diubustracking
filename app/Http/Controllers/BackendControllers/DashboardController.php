@@ -6,6 +6,7 @@ use App\Models\Bus;
 use App\Models\User;
 use App\Models\Route;
 use App\Models\Driver;
+use App\Models\AssignBus;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
@@ -16,19 +17,14 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
 
-        // $ActiveCleaners = EmployeInfo::where('IsActive', 1)->count();
-        // $Customers = EmployeInfo::count();
-        // $PendingOrders = OrderMaster::where('Status', "Pending")->count();
-        // $PendingShedule = OrderSheduleInfo::where('ScheduleStatus', "Pending")->where('IsInvoiced', '0')->count();
-        // $TaskAssigned = TaskInfo::where('IsCompleted', 0)->count();
-        // $TaskCompleted = TaskInfo::where('IsCompleted', 1)->count();
 
         $totalBus = Bus::count();
         $totalDriver = Driver::count();
-        $unAssignBus = 0;
-        $assignBus = 0;
+        $assignBuslist = AssignBus::pluck('bus_id')->toArray();
+        $unAssignBus = Bus::whereNotIn('id', array_values($assignBuslist))->count();
+        $assignBus = Bus::whereIn('id', array_values($assignBuslist))->count();
         $totalRoute = Route::count();
-        $totalUser = User::where('usertype', 'Active')->count();
+        $totalUser = User::where('usertype', 'User')->count();
 
 
         return  view('dashboard/index', compact('totalBus', 'totalDriver', 'totalRoute', 'unAssignBus', 'assignBus', 'totalUser'));

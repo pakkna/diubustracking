@@ -81,6 +81,11 @@ class User extends Authenticatable implements JWTSubject
         return self::where('usertype', $type)->paginate(10);
         // return UserRole::select('role_master.RoleName')->join('role_master','role_master.Id','user_role.RoleId')->where('user_role.UserId', Auth::user()->Id)->first()->RoleName;
     }
+    static function getActiveDrivers($status)
+    {
+        return self::where('usertype', 'Driver')->where('is_active', $status)->orderBy('created_at', 'DESC')->get();
+        // return UserRole::select('role_master.RoleName')->join('role_master','role_master.Id','user_role.RoleId')->where('user_role.UserId', Auth::user()->Id)->first()->RoleName;
+    }
     public function driver()
     {
         return $this->hasOne(Driver::class, 'user_id');
