@@ -147,8 +147,8 @@
                     searchable: true
                 },
                 {
-                    data: 'bus_name',
-                    name: 'bus_name',
+                    data: 'bus_number',
+                    name: 'bus_number',
                     searchable: true,
                 },
                 {
