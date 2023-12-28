@@ -70,7 +70,7 @@ class DriverController extends Controller
                 if ($userSave->id > 0) {
 
                     $driverData = [
-                        'driver_name' => $request->name,
+                        'driver_name' => ucfirst($request->name),
                         'primary_contact' => $request->mobile ?? '',
                         'license_number' => $request->license_number ?? '',
                         'license_photo' => $request->license_photo ?? '',

@@ -34,6 +34,7 @@ Route::group(['middleware' => 'api'], function () {
 
     Route::get('/route-schedule-list', [RouteController::class, 'route_schedule_list']);
     Route::get('/route-wise-bus', [RouteController::class, 'route_wise_bus']);
+    Route::get('/active-bus-list/{route_id}', [RouteController::class, 'active_bus_list']);
 
     //Driver Bus Info
     Route::get('/driver-bus-info', [UserController::class, 'driver_bus_info']);

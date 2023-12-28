@@ -182,7 +182,7 @@ class RouteController extends Controller
 
             $total_bus = $businfo->get()->count();
             $dateWiseBusInfo = $businfo->leftJoin('location', 'location.bus_id', 'assign_bus.bus_id')->whereBetween('location.created_at', [date('Y-m-d') . " 00:00:00", date('Y-m-d') . " 23:59:59"]);
-            $activeBusList = $dateWiseBusInfo->get();
+
 
 
             $data = [
@@ -190,14 +190,37 @@ class RouteController extends Controller
                 "route_name" => $singleRoute->route_name,
                 "route_code" => $singleRoute->route_code,
                 "total_bus" => $total_bus,
-                "active_bus" => $activeBusList->count() ?? 0,
-                "active_bus_list" => !empty($activeBusList) ? $activeBusList : (object)[],
-
+                "active_bus" => $dateWiseBusInfo->get()->count() ?? 0,
             ];
             array_push($routeWiseBusInfo, $data);
         }
 
 
         return $this->ResponseJson(false, 'Route Schedule', $routeWiseBusInfo, 200);
+    }
+    public function active_bus_list($route_id = null)
+    {
+
+        $activeBusList = DB::table('assign_bus_route_to_driver as assign_bus')
+            ->leftJoin('bus_list', 'bus_list.id', 'assign_bus.bus_id')
+            ->leftJoin('route_list', 'route_list.id', 'assign_bus.route_id')
+            ->leftJoin('users', 'users.id', 'assign_bus.driver_user_id')
+            ->leftJoin('location', 'location.bus_id', 'assign_bus.bus_id')->whereBetween('location.created_at', [date('Y-m-d') . " 00:00:00", date('Y-m-d') . " 23:59:59"])
+            ->select(
+                'bus_list.id as bus_id',
+                'route_list.id as route_id',
+                'users.id as driver_id',
+                'bus_list.bus_name',
+                'bus_list.bus_number',
+                'route_list.route_name',
+                'route_list.route_code',
+                'users.name as driver_name',
+
+                'location.lat as last_lat',
+                'location.long as last_long'
+            )
+            ->where('assign_bus.route_id', $route_id)->get();
+
+        return $this->ResponseJson(false, 'Route Schedule', $activeBusList, 200);
     }
 }
