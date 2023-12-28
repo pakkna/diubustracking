@@ -87,7 +87,6 @@ class ApiAuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'registered_by' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -113,7 +112,7 @@ class ApiAuthController extends Controller
                         'email' => $request->email,
                         'password' => Hash::make($request->email . 'thirdPartyApi'),
                         'user_type' => "User",
-                        'register_by' => "Google"
+                        'registered_by' => "Google"
                     ]);
 
                     return $this->login_for_user($set_request);

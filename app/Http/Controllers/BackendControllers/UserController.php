@@ -47,11 +47,21 @@ class UserController extends Controller
             ->addColumn('action', function ($result) {
 
                 return '<div role="group" class="btn-group-md btn-group text-white">
-                <a href="/route-delete/' . $result->id . '" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
+                <a href="/app-user-delete/' . $result->id . '" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
                 </div>';
                 /*  <a href="/route-update/' . $result->id . '"  class="btn-shadow btn btn-warning mr-3" title="Route Update"><i class="fa fa-edit"></i></a> */
             })
             ->rawColumns(['action', 'is_active'])
             ->make(true);
+    }
+
+    public function app_users_delete($id = null)
+    {
+        $user = User::find($id);
+        if ($user->delete()) {
+            return redirect()->back()->with("flashMessageSuccess", "User Deleted Succesfully");
+        } else {
+            return redirect()->back()->withErrors("flashMessageDanger", "User Deletion Error!");
+        }
     }
 }

@@ -157,7 +157,7 @@ class DriverController extends Controller
             $driver->delete();
             return redirect()->back()->with("flashMessageSuccess", "Driver Deleted Succesfully");
         } else {
-            return redirect()->back()->withErrors("flashMessageDanger", "Driver Deletetion Error!");
+            return redirect()->back()->withErrors("flashMessageDanger", "Driver Deletion Error!");
         }
     }
 }

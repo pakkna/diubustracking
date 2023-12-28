@@ -106,7 +106,7 @@ class BusController extends Controller
         if ($bus->delete()) {
             return redirect()->back()->with("flashMessageSuccess", "Your Bus  Deleted Succesfully");
         } else {
-            return redirect()->back()->with("flashMessageDanger", "Your Bus  deletetion Faild");
+            return redirect()->back()->with("flashMessageDanger", "Your Bus  Deletion Faild");
         }
     }
 

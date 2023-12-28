@@ -124,7 +124,7 @@ class RouteController extends Controller
         if ($route->delete()) {
             return redirect()->back()->with("flashMessageSuccess", "Your Route  Deleted Succesfully");
         } else {
-            return redirect()->back()->with("flashMessageDanger", "Your Route  deletetion Faild");
+            return redirect()->back()->with("flashMessageDanger", "Your Route  Deletion Faild");
         }
     }
 }

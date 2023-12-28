@@ -102,7 +102,7 @@
                     name: 'mobile',
                     searchable: true,
                     render: function(data, type, row) {
-                        return (row.mobile==null && row.mobile=="") ??"-";
+                        return (row.mobile)? row.mobile: "None" ;
                     }
                 },
                 {
@@ -111,7 +111,7 @@
                     searchable: true,
 
                     render: function(data, type, row) {
-                        return (row.address==null && row.address=="") ??"-";
+                        return (row.address)? row.address: 'None' ;
                     }
                 },
                 {
@@ -120,7 +120,8 @@
                     searchable: true,
 
                     render: function(data, type, row) {
-                        return '<div class="badge badge-pill badge-primary">'+row.register_by+'</div>';
+                        let btnclass= row.registered_by=="App"?'badge-primary':'badge-success'
+                        return '<div class="badge badge-pill '+btnclass+'">'+row.registered_by+'</div>';
                     }
                 },
                 {

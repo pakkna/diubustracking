@@ -67,4 +67,5 @@ Route::group(['middleware' => 'auth'], function () {
     //Unassign bus list
     Route::get('/registered-app-users', [UserController::class, 'registered_app_users']);
     Route::post('/registered-app-users-data', [UserController::class, 'app_users_data'])->name("app.users.data");
+    Route::get('/app-user-delete/{id}', [UserController::class, 'app_users_delete'])->name("app.users.delete");
 });
