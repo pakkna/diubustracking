@@ -177,8 +177,8 @@ class RouteController extends Controller
                     'bus_list.bus_number',
                     'users.name as driver_name'
                 )
-                ->where('assign_bus.route_id', $singleRoute->id)
-                ->groupBy('assign_bus.id');
+                ->where('assign_bus.route_id', $singleRoute->id);
+            //->groupBy('assign_bus.id');
 
             $total_bus = $businfo->get()->count();
             $dateWiseBusInfo = $businfo->leftJoin('location', 'location.bus_id', 'assign_bus.bus_id')->whereBetween('location.created_at', [date('Y-m-d') . " 00:00:00", date('Y-m-d') . " 23:59:59"]);
