@@ -4,7 +4,18 @@
 @include('layouts.header')
 
 @include('layouts.sidebar')
+<script type="text/javascript">
+    function go_map(params) {
+        let settings = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
+        width=800,height=600,left=100,top=100`;
+        if (params.indexOf('http') > -1) {
+            open(params, 'test',settings);
+        }else{
+            alert("Map Url Is Not Valid !");
+        }
 
+    }
+</script>
 <!-- Dashboard Header  section -->
 
 <div class="app-main__outer">
