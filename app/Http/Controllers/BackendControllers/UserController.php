@@ -5,6 +5,7 @@ namespace App\Http\Controllers\BackendControllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class UserController extends Controller
@@ -63,6 +64,68 @@ class UserController extends Controller
             echo json_encode(['msg' => 'Success', 'type' => 'delete', 'action' => '1']);
         } else {
             echo json_encode(['msg' => 'Error', 'type' => 'delete', 'action' => '0']);
+        }
+    }
+
+    public function show()
+    {
+        return view('dashboard.app_users.admin_profile');
+    }
+    public function edit(Request $request)
+    {
+
+
+        $data = DB::table('users')->select('profile_photo', 'password')->where('id', $request->id)->first();
+
+        if (!empty($request->image)) {
+
+            $image = $request->file('image');
+
+            $input['image_name'] = time() . '.' . $image->getClientOriginalExtension();
+
+            $destination_path = public_path('/assets/images/avatars');
+
+            $image->move($destination_path, $input['image_name']);
+        } else {
+            $input['image_name'] = $data->profile_photo;
+        }
+
+        if (!empty($request->password)) {
+            $pass = Hash::make($request->password);
+        } else {
+            $pass = $data->password;
+        }
+
+
+        $data = [
+
+            "name" => $request->name,
+
+            "email" => $request->email,
+
+            "username" => $request->email,
+
+            "profile_photo" => $input['image_name'],
+
+            "mobile" => $request->mobile,
+
+            "password" => $pass,
+
+            "updated_at" => date('Y-m-d H:i:s')
+
+        ];
+
+
+        try {
+
+            DB::table('users')->where('id', $request->id)->update($data);
+            return redirect("edit-profile")->with("flashMessageSuccess", "Profile Changed Successfully");
+        } catch (\Illuminate\Database\QueryException $e) {
+
+            $errorCode = $e->errorInfo[1];
+            if ($errorCode == '1062') {
+                return redirect("edit-profile")->with("flashMessageDanger", "User Name Already Exists ! Try Another One.");
+            }
         }
     }
 }

@@ -71,4 +71,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/registered-app-users', [UserController::class, 'registered_app_users']);
     Route::post('/registered-app-users-data', [UserController::class, 'app_users_data'])->name("app.users.data");
     Route::post('/app-user-delete', [UserController::class, 'app_users_delete'])->name("app.users.delete");
+
+    //Edit user profile
+    Route::get('edit-profile', [UserController::class, 'show']);
+    Route::post('edit-data', [UserController::class, 'edit'])->name('edit-data');
 });
