@@ -60,7 +60,7 @@ class DriverController extends Controller
                     'mobile' => $request->mobile ?? '',
                     'address' => $request->address ?? '',
                     'usertype' => 'Driver',
-                    'password' => Hash::make($request->address),
+                    'password' => Hash::make($request->password),
                     'register_by' => 'System Administrator',
                     'is_active' => 'Active',
                 ];
