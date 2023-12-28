@@ -10,7 +10,7 @@ use App\Models\AssignBus;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
-
+use PhpParser\Node\Expr\Assign;
 
 class BusController extends Controller
 {
@@ -57,14 +57,10 @@ class BusController extends Controller
             $end_date = date_validate(date('Y-m-d'));
         }
 
-        $query  = Bus::orderBy('created_at', 'DESC');
+        $query  = Bus::whereBetween('created_at', [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'DESC');
 
 
         return Datatables::of($query)
-
-            ->addColumn('bus_id', function ($result) {
-                return "Bus-" . $result->id;
-            })
             ->addColumn('is_active', function ($result) {
 
                 if ($result->is_active == "Active") {
@@ -78,13 +74,14 @@ class BusController extends Controller
                 $statusShow = $result->is_active == "Active" ? '<i class="fa fa-ban mr-2"></i>InActive' : '<i class="fa fa-check-circle mr-2"></i>Active';
                 $class = $result->is_active == "Active" ? "btn-warning" : "btn-success";
 
-
+                $dt = "'delete'";
                 return '<div role="group" class="btn-group-md btn-group text-white">
                 <a href="/bus-status/' . $result->is_active . '/' . $result->id . '"  class="btn-shadow btn ' . $class . ' mr-3" title="Change Status">' . $statusShow . '</a>
-                <a href="/bus-delete/' . $result->id . '" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
+                <a href="javascript:void(0)" onclick="ajaxStatus(' . $result->id . ',this,' . $dt . ')" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
                 </div>';
             })
             ->rawColumns(['action', 'is_active'])
+            ->addIndexColumn()
             ->make(true);
     }
     public function busStatusChange($status = null, $id = null)
@@ -98,22 +95,33 @@ class BusController extends Controller
             return redirect()->back()->with("flashMessageDanger", "Your Bus Status Updated Faild");
         }
     }
-    public function busDelete($id = null)
+    public function busDelete(Request $request)
     {
 
-
-        $bus = Bus::find($id);
+        $bus = Bus::find($request->id);
         if ($bus->delete()) {
-            return redirect()->back()->with("flashMessageSuccess", "Your Bus  Deleted Succesfully");
+            echo json_encode(['msg' => 'Success', 'type' => 'delete', 'action' => '1']);
         } else {
-            return redirect()->back()->with("flashMessageDanger", "Your Bus  Deletion Faild");
+            echo json_encode(['msg' => 'Error', 'type' => 'delete', 'action' => '0']);
         }
     }
 
     public function busAssignToRoute()
     {
-        $busList = Bus::select('id', 'bus_name', 'bus_number')->where('is_active', 'Active')->orderBy('created_at', 'DESC')->get();
-        $driver_list = User::GetActiveDrivers('Active');
+        $assignBuslist = AssignBus::pluck('bus_id')->toArray();
+        $driverUserlist = AssignBus::pluck('driver_user_id')->toArray();
+
+        $busList = Bus::select('id', 'bus_name', 'bus_number')
+            ->where('is_active', 'Active')
+            ->whereNotIn('id', array_values($assignBuslist))
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        $driver_list = User::where('usertype', 'Driver')
+            ->where('is_active', 'Active')
+            ->whereNotIn('id', array_values($driverUserlist))
+            ->orderBy('created_at', 'DESC')
+            ->get();
         $routeList = Route::orderBy('created_at', 'DESC')->get();
         return view('dashboard.bus.assignbus_driver', compact('busList', 'driver_list', 'routeList'));
     }
@@ -178,17 +186,31 @@ class BusController extends Controller
             ->join('bus_list', 'bus_list.id', 'assign_bus_route_to_driver.bus_id')
             ->join('users', 'users.id', 'assign_bus_route_to_driver.driver_user_id')
             ->join('route_list', 'route_list.id', 'assign_bus_route_to_driver.route_id')
+            ->whereBetween('assign_bus_route_to_driver.created_at', [$start_date . " 00:00:00", $end_date . " 23:59:59"])
             ->orderBy('assign_bus_route_to_driver.created_at', 'DESC');
 
 
         return Datatables::of($query)
             ->addColumn('action', function ($result) {
+                $dt = "'delete'";
                 return '<div role="group" class="btn-group-md btn-group text-white">
-                <a href="/assign-bus-delete/' . $result->id . '" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
+                <a href="javascript:void(0)" onclick="ajaxStatus(' . $result->id . ',this,' . $dt . ')"  class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
                 </div>';
             })
             ->rawColumns(['action'])
+            ->addIndexColumn()
             ->make(true);
+    }
+
+    public function AssignBusDelete(Request $request)
+    {
+
+        $Assignbus = AssignBus::find($request->id);
+        if ($Assignbus->delete()) {
+            echo json_encode(['msg' => 'Success', 'type' => 'delete', 'action' => '1']);
+        } else {
+            echo json_encode(['msg' => 'Error', 'type' => 'delete', 'action' => '0']);
+        }
     }
     public function AssignBusRouteList()
     {
@@ -228,6 +250,7 @@ class BusController extends Controller
             ->join('bus_list', 'bus_list.id', 'assign_bus.bus_id')
             ->join('users', 'users.id', 'assign_bus.driver_user_id')
             ->join('route_list', 'route_list.id', 'assign_bus.route_id')
+            ->whereBetween('assign_bus.created_at', [$start_date . " 00:00:00", $end_date . " 23:59:59"])
             ->orderBy('assign_bus.created_at', 'DESC');
 
         return Datatables::of($query)
@@ -253,13 +276,14 @@ class BusController extends Controller
                 </div>';
             })
             ->addColumn('action', function ($result) {
-
+                $dt = "'delete'";
                 return '<div role="group" class="btn-group-md btn-group text-white">
-                <a href="/route-delete/' . $result->id . '" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
+                <a href="javascript:void(0)" onclick="ajaxStatus(' . $result->id . ',this,' . $dt . ')" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
                 </div>';
                 /*  <a href="/route-update/' . $result->id . '"  class="btn-shadow btn btn-warning mr-3" title="Route Update"><i class="fa fa-edit"></i></a> */
             })
             ->rawColumns(['action', 'start_time_slot', 'departure_time_slot', 'route_details', 'route_map_url'])
+            ->addIndexColumn()
             ->make(true);
     }
     public function unassign_bus_list()
@@ -285,14 +309,10 @@ class BusController extends Controller
 
         $assignBuslist = AssignBus::pluck('bus_id')->toArray();
 
-        $query = Bus::whereNotIn('id', array_values($assignBuslist))->orderBy('created_at', 'DESC');
+        $query = Bus::whereBetween('created_at', [$start_date . " 00:00:00", $end_date . " 23:59:59"])->whereNotIn('id', array_values($assignBuslist))->orderBy('created_at', 'DESC');
 
 
         return Datatables::of($query)
-
-            ->addColumn('bus_id', function ($result) {
-                return "Bus-" . $result->id;
-            })
             ->addColumn('is_active', function ($result) {
 
                 if ($result->is_active == "Active") {
@@ -310,15 +330,16 @@ class BusController extends Controller
                 $statusShow = $result->is_active == "Active" ? '<i class="fa fa-ban mr-2"></i>InActive' : '<i class="fa fa-check-circle mr-2"></i>Active';
                 $class = $result->is_active == "Active" ? "btn-warning" : "btn-success";
 
-
+                $dt = "'delete'";
                 return '<div role="group" class="btn-group-md btn-group text-white">
                 </a>
                 <a href="/assgin-bus" class="btn-shadow btn btn-primary mr-3" title="Bus Add"><i class="metismenu-icon pe-7s-network mr-2"></i> Assign</a>
                 <a href="/bus-status/' . $result->is_active . '/' . $result->id . '"  class="btn-shadow btn ' . $class . ' mr-3" title="Change Status">' . $statusShow . '</a>
-                <a href="/bus-delete/' . $result->id . '" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
+                <a href="javascript:void(0)" onclick="ajaxStatus(' . $result->id . ',this,' . $dt . ')" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
                 </div>';
             })
             ->rawColumns(['action', 'is_active', 'status'])
+            ->addIndexColumn()
             ->make(true);
     }
 }

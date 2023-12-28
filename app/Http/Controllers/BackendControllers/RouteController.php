@@ -71,7 +71,7 @@ class RouteController extends Controller
             $end_date = date_validate(date('Y-m-d'));
         }
 
-        $query  = Route::orderBy('created_at', 'DESC');
+        $query  = Route::whereBetween('created_at', [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'DESC');
 
 
         return Datatables::of($query)
@@ -102,13 +102,14 @@ class RouteController extends Controller
                 </div>';
             })
             ->addColumn('action', function ($result) {
-
+                $dt = "'delete'";
                 return '<div role="group" class="btn-group-md btn-group text-white">
-                <a href="/route-delete/' . $result->id . '" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
+                <a href="javascript:void(0)" onclick="ajaxStatus(' . $result->id . ',this,' . $dt . ')" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
                 </div>';
                 /*  <a href="/route-update/' . $result->id . '"  class="btn-shadow btn btn-warning mr-3" title="Route Update"><i class="fa fa-edit"></i></a> */
             })
             ->rawColumns(['action', 'start_time_slot', 'departure_time_slot', 'route_details', 'route_map_url'])
+            ->addIndexColumn()
             ->make(true);
     }
     public function routeInfoGet(Request $request)
@@ -118,13 +119,13 @@ class RouteController extends Controller
 
         return $info->route_details ?? '';
     }
-    public function routedelete($id = null)
+    public function routedelete(Request $request)
     {
-        $route = Route::find($id);
+        $route = Route::find($request->id);
         if ($route->delete()) {
-            return redirect()->back()->with("flashMessageSuccess", "Your Route  Deleted Succesfully");
+            echo json_encode(['msg' => 'Success', 'type' => 'delete', 'action' => '1']);
         } else {
-            return redirect()->back()->with("flashMessageDanger", "Your Route  Deletion Faild");
+            echo json_encode(['msg' => 'Error', 'type' => 'delete', 'action' => '0']);
         }
     }
 }

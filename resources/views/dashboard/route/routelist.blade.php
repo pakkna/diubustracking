@@ -114,6 +114,7 @@
                     class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
+                            <th>Serial</th>
                             <th>Route Name</th>
                             <th>Route Number</th>
                             <th>Start Time</th>
@@ -134,6 +135,65 @@
     </div>
 
 </div>
+<script>
+    $.ajaxSetup({
+
+        headers: {
+
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+
+        }
+
+    });
+    function ajaxStatus(id, the, action) {
+
+        Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'This activity will effected on route !',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            $.ajax({
+
+                                url: '{{ route('route.delete') }}',
+                                type: 'post',
+                                data: {
+                                    id: id,
+                                    type: 'status',
+                                    action: action
+
+                                },
+                                dataType: 'json',
+                                success: function(response) {
+
+                                    if(response.action=='1'){
+                                      Swal.fire("Done", "Route Deleted Successfully", "success");
+                                      $('#process_data_table').DataTable().ajax.reload();
+                                    }else{
+                                        Swal.fire(
+                                            'Action Error',
+                                            'Your imaginary status is not change.',
+                                            'error'
+                                        )
+                                    }
+
+                                }
+                            });
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            Swal.fire(
+                                'Cancelled',
+                                'Your imaginary status is safe.',
+                                'error'
+                            )
+                        }
+            });
+
+    }
+</script>
 @include('layouts.footer')
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
     aria-hidden="true">
@@ -177,6 +237,11 @@
                 }
             },
             columns: [
+                {
+                    "data": 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
                 {
                     data: 'route_name',
                     name: 'route_name',

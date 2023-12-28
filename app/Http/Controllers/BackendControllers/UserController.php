@@ -31,7 +31,7 @@ class UserController extends Controller
             $end_date = date_validate(date('Y-m-d'));
         }
 
-        $query  = User::where('usertype', 'User')->get();
+        $query  = User::whereBetween('created_at', [$start_date . " 00:00:00", $end_date . " 23:59:59"])->where('usertype', 'User')->get();
 
 
         return Datatables::of($query)
@@ -45,23 +45,24 @@ class UserController extends Controller
                 }
             })
             ->addColumn('action', function ($result) {
-
+                $dt = "'delete'";
                 return '<div role="group" class="btn-group-md btn-group text-white">
-                <a href="/app-user-delete/' . $result->id . '" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
+                <a href="javascript:void(0)" onclick="ajaxStatus(' . $result->id . ',this,' . $dt . ')" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
                 </div>';
                 /*  <a href="/route-update/' . $result->id . '"  class="btn-shadow btn btn-warning mr-3" title="Route Update"><i class="fa fa-edit"></i></a> */
             })
             ->rawColumns(['action', 'is_active'])
+            ->addIndexColumn()
             ->make(true);
     }
 
-    public function app_users_delete($id = null)
+    public function app_users_delete(Request $request)
     {
-        $user = User::find($id);
+        $user = User::find($request->id);
         if ($user->delete()) {
-            return redirect()->back()->with("flashMessageSuccess", "User Deleted Succesfully");
+            echo json_encode(['msg' => 'Success', 'type' => 'delete', 'action' => '1']);
         } else {
-            return redirect()->back()->withErrors("flashMessageDanger", "User Deletion Error!");
+            echo json_encode(['msg' => 'Error', 'type' => 'delete', 'action' => '0']);
         }
     }
 }

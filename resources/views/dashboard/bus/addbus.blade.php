@@ -121,7 +121,7 @@
                         class="table table-hover table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>Bus Id</th>
+                                <th>Serial</th>
                                 <th>Bus name</th>
                                 <th>Bus Number</th>
                                 <th>Permit Status</th>
@@ -138,41 +138,61 @@
 
         <script>
             $.ajaxSetup({
+
                 headers: {
+
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+
                 }
+
             });
-            function ajaxApprove(id, the, action) {
+            function ajaxStatus(id, the, action) {
+
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'Do you want to Delete this Expense Info ?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, keep it'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: '',
-                            type: 'post',
-                            data: {
-                                id: id,
-                                type: action
-                            },
-                            dataType: 'json',
-                            success: function(response) {
-                                Swal.fire(response.title, response.msg , response.alert);
-                                location.reload();
-                            }
-                        });
-                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        Swal.fire(
-                            'Cancelled',
-                            'Your imaginary file is safe.',
-                            'error'
-                        )
-                    }
-                });
+                                title: 'Are you sure?',
+                                text: 'This activity will effected on assign bus & route !',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes',
+                                cancelButtonText: 'No'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+
+                                    $.ajax({
+
+                                        url: '{{ route('bus.delete') }}',
+                                        type: 'post',
+                                        data: {
+                                            id: id,
+                                            type: 'status',
+                                            action: action
+
+                                        },
+                                        dataType: 'json',
+                                        success: function(response) {
+
+                                            if(response.action=='1'){
+                                              Swal.fire("Done", "Bus Deleted Successfully", "success");
+                                              $('#process_data_table').DataTable().ajax.reload();
+                                            }else{
+                                                Swal.fire(
+                                                    'Action Error',
+                                                    'Your imaginary status is not change.',
+                                                    'error'
+                                                )
+                                            }
+
+                                        }
+                                    });
+                                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                    Swal.fire(
+                                        'Cancelled',
+                                        'Your imaginary status is safe.',
+                                        'error'
+                                    )
+                                }
+                    });
+
             }
         </script>
     </div>
@@ -203,13 +223,9 @@
             },
             columns: [
                 {
-                    data: 'id',
-                    name: 'id',
-                    searchable: true,
-                    render(data, type, row) {
-                        return "Bus-"+row.id;
-                    },
-
+                    "data": 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
                 },
                 {
                     data: 'bus_name',

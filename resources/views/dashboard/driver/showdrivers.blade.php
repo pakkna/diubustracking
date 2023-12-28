@@ -96,6 +96,7 @@
                     class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
+                            <th>Serial</th>
                             <th>Driver Name</th>
                             <th>Email </th>
                             <th>Mobile</th>
@@ -134,7 +135,7 @@
 
         Swal.fire({
                         title: 'Are you sure?',
-                        text: 'This employee activity will effected !',
+                        text: 'This activity will effected on assign bus & driver!',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Yes',
@@ -144,7 +145,7 @@
 
                             $.ajax({
 
-                                url: '',
+                                url: '{{ route('driver.delete') }}',
                                 type: 'post',
                                 data: {
                                     id: id,
@@ -155,12 +156,9 @@
                                 dataType: 'json',
                                 success: function(response) {
 
-                                   if(response.action=='1'){
-                                      Swal.fire("Active", "Applicants activity changed successfully", "success");
+                                    if(response.action=='1'){
+                                      Swal.fire("Done", "Driver Deleted Successfully", "success");
                                       $('#process_data_table').DataTable().ajax.reload();
-                                    }else if(response.action=='0'){
-                                        Swal.fire("Inactive", "Applicants activity changed successfully", "success");
-                                        $('#process_data_table').DataTable().ajax.reload();
                                     }else{
                                         Swal.fire(
                                             'Action Error',
@@ -227,7 +225,11 @@
                 },
 
                 columns: [
-
+                    {
+                        "data": 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
                     {
 
                         data: 'name',

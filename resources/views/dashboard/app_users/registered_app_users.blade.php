@@ -47,7 +47,9 @@
                     class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>User Name</th>
+                            <th>Serial</th>
+                            <th>Name</th>
+                            <th>Username</th>
                             <th>User Email</th>
                             <th>User Mobile</th>
                             <th>Address</th>
@@ -63,7 +65,65 @@
         </div>
     </div>
 </div>
+<script>
+    $.ajaxSetup({
 
+        headers: {
+
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+
+        }
+
+    });
+    function ajaxStatus(id, the, action) {
+
+        Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'This activity will effected on user !',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            $.ajax({
+
+                                url: '{{ route('app.users.delete') }}',
+                                type: 'post',
+                                data: {
+                                    id: id,
+                                    type: 'status',
+                                    action: action
+
+                                },
+                                dataType: 'json',
+                                success: function(response) {
+
+                                    if(response.action=='1'){
+                                      Swal.fire("Done", "User Deleted Successfully", "success");
+                                      $('#process_data_table').DataTable().ajax.reload();
+                                    }else{
+                                        Swal.fire(
+                                            'Action Error',
+                                            'Your imaginary status is not change.',
+                                            'error'
+                                        )
+                                    }
+
+                                }
+                            });
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            Swal.fire(
+                                'Cancelled',
+                                'Your imaginary status is safe.',
+                                'error'
+                            )
+                        }
+            });
+
+    }
+</script>
 @include('layouts.footer')
 <script type="text/javascript">
     $(document).ready(function() {
@@ -88,10 +148,18 @@
             },
             columns: [
                 {
+                    "data": 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
                     data: 'name',
                     name: 'name',
                 },
-
+                {
+                    data: 'username',
+                    name: 'username',
+                },
                 {
                     data: 'email',
                     name: 'email',

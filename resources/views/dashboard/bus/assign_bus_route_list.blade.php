@@ -58,6 +58,7 @@
                     class="table table-hover table-striped table-bordered">
                     <thead>
                         <tr>
+                            <th>Serial</th>
                             <th>Bus Name</th>
                             <th>Driver Name</th>
                             <th>Route Name</th>
@@ -75,7 +76,65 @@
         </div>
     </div>
 </div>
+<script>
+    $.ajaxSetup({
 
+        headers: {
+
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+
+        }
+
+    });
+    function ajaxStatus(id, the, action) {
+
+        Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'This activity will effected on Assign Bus & Route',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            $.ajax({
+
+                                url: '{{ route('assign.bus.delete') }}',
+                                type: 'post',
+                                data: {
+                                    id: id,
+                                    type: 'status',
+                                    action: action
+
+                                },
+                                dataType: 'json',
+                                success: function(response) {
+
+                                    if(response.action=='1'){
+                                      Swal.fire("Done", "Assign Bus Route & Driver Remove Successfully", "success");
+                                      $('#process_data_table').DataTable().ajax.reload();
+                                    }else{
+                                        Swal.fire(
+                                            'Action Error',
+                                            'Your imaginary status is not change.',
+                                            'error'
+                                        )
+                                    }
+
+                                }
+                            });
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            Swal.fire(
+                                'Cancelled',
+                                'Your imaginary status is safe.',
+                                'error'
+                            )
+                        }
+            });
+
+    }
+</script>
 @include('layouts.footer')
 <script type="text/javascript">
     $(document).ready(function() {
@@ -104,6 +163,11 @@
                 }
             },
             columns: [
+                {
+                    "data": 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
                 {
                     data: 'bus_name',
                     name: 'bus_name',

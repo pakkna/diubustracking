@@ -35,14 +35,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/driver-store', [DriverController::class, 'driverStore'])->name("driver.store");
     Route::get('/registered-drivers', [DriverController::class, 'registered_drivers'])->name("driver.all");
     Route::post('/registered-drivers-data', [DriverController::class, 'registered_drivers_data'])->name("driver.data");
-    Route::get('/driver-delete/{user_id}', [DriverController::class, 'driver_delete'])->name("driver.delete");
+    Route::post('/driver-delete', [DriverController::class, 'driver_delete'])->name("driver.delete");
 
     // Bus Registration
     Route::get('/bus-registration', [BusController::class, 'bus_registration_view']);
     Route::post('/bus-store', [BusController::class, 'busStore'])->name("bus.store");
     Route::post('/bus-list', [BusController::class, 'busList'])->name("bus.list");
     Route::get('/bus-status/{status}/{id}', [BusController::class, 'busStatusChange'])->name("bus.status");
-    Route::get('/bus-delete/{id}', [BusController::class, 'busDelete'])->name("bus.delete");
+    Route::post('/bus-delete', [BusController::class, 'busDelete'])->name("bus.delete");
 
     // Bus Registration
     Route::get('/route-create', [RouteController::class, 'route_create']);
@@ -50,7 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/route-list', [RouteController::class, 'routeList'])->name("route.list");
     Route::post('/route-list-data', [RouteController::class, 'routeData'])->name("route.data");
     Route::post('/route-info-get', [RouteController::class, 'routeInfoGet'])->name("route.info.get");
-    Route::get('/route-delete/{id}', [RouteController::class, 'routedelete'])->name("route.delete");
+    Route::post('/route-delete', [RouteController::class, 'routedelete'])->name("route.delete");
 
     //Assign Bus to Route and Driver
     Route::get('/assgin-bus', [BusController::class, 'busAssignToRoute']);
@@ -58,6 +58,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/assign-bus-list', [BusController::class, 'assign_bus_data'])->name("assign.bus.data");
     Route::get('/assign-route-list', [BusController::class, 'AssignBusRouteList']);
     Route::post('/assign-route-data', [BusController::class, 'AssignBusRouteListData'])->name("assign.route.data");
+
+    //Assign Bus to Route and Driver Delete
+    Route::post('/assign-bus-delete', [BusController::class, 'AssignBusDelete'])->name("assign.bus.delete");
 
     //Unassign bus list
     Route::get('/unassign-bus-list', [BusController::class, 'unassign_bus_list']);
@@ -67,5 +70,5 @@ Route::group(['middleware' => 'auth'], function () {
     //Unassign bus list
     Route::get('/registered-app-users', [UserController::class, 'registered_app_users']);
     Route::post('/registered-app-users-data', [UserController::class, 'app_users_data'])->name("app.users.data");
-    Route::get('/app-user-delete/{id}', [UserController::class, 'app_users_delete'])->name("app.users.delete");
+    Route::post('/app-user-delete', [UserController::class, 'app_users_delete'])->name("app.users.delete");
 });

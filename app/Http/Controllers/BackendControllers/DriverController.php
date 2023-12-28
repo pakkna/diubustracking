@@ -127,7 +127,9 @@ class DriverController extends Controller
         }
 
         $query  = User::join('driver_info', 'driver_info.user_id', 'users.id')
-            ->where('usertype', 'Driver')->get();
+            ->where('usertype', 'Driver')
+            ->whereBetween('users.created_at', [$start_date . " 00:00:00", $end_date . " 23:59:59"])
+            ->get();
 
         return Datatables::of($query)
 
@@ -140,24 +142,27 @@ class DriverController extends Controller
                 }
             })
             ->addColumn('action', function ($result) {
-
+                $dt = "'delete'";
                 return '<div role="group" class="btn-group-md btn-group text-white">
-                    <a href="/driver-delete/' . $result->id . '" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
+                    <a href="javascript:void(0)" onclick="ajaxStatus(' . $result->user_id . ',this,' . $dt . ')" class="btn-shadow btn btn-danger" title="Bus Remove"><i class="fa fa-trash"></i></a>
                     </div>';
                 /*  <a href="/route-update/' . $result->id . '"  class="btn-shadow btn btn-warning mr-3" title="Route Update"><i class="fa fa-edit"></i></a> */
             })
             ->rawColumns(['action', 'is_active'])
+            ->addIndexColumn()
             ->make(true);
     }
-    public function driver_delete($user_id = null)
+    public function driver_delete(Request $request)
     {
-        $driver = User::find($user_id);
 
-        if ($driver->driver->delete()) {
-            $driver->delete();
-            return redirect()->back()->with("flashMessageSuccess", "Driver Deleted Succesfully");
+        $user = User::find($request->id);
+        if ($user->driver->delete()) {
+            $user->delete();
+            echo json_encode(['msg' => 'Success', 'type' => 'delete', 'action' => '1']);
+            //return redirect()->back()->with("flashMessageSuccess", "Driver Deleted Succesfully");
         } else {
-            return redirect()->back()->withErrors("flashMessageDanger", "Driver Deletion Error!");
+            echo json_encode(['msg' => 'Error', 'type' => 'delete', 'action' => '0']);
+            //return redirect()->back()->withErrors("flashMessageDanger", "Driver Deletion Error!");
         }
     }
 }
