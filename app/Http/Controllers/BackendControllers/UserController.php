@@ -250,7 +250,7 @@ class UserController extends Controller
         } else {
 
             try {
-                $todayLocation = Location::where('bus_id', $request->bus_id)
+                $todayLocation = DB::table('location')->where('bus_id', $request->bus_id)
                     ->where('route_id', $request->route_id)
                     ->whereDate('created_at', date('Y-m-d'))->first();
 

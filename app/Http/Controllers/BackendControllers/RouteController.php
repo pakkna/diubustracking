@@ -8,6 +8,7 @@ use App\Models\Route;
 use App\Models\AssignBus;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class RouteController extends Controller
@@ -167,21 +168,28 @@ class RouteController extends Controller
         $routeWiseBusInfo = [];
 
         foreach ($routes as $singleRoute) {
-            $businfo = AssignBus::select('bus_list.id as bus_id', 'bus_list.bus_name', 'bus_list.bus_number', 'users.name as driver_name')
-                ->leftJoin('bus_list', 'bus_list.id', 'assign_bus_route_to_driver.bus_id')
-                ->leftJoin('users', 'users.id', 'assign_bus_route_to_driver.driver_user_id')
-                ->where('assign_bus_route_to_driver.route_id', $singleRoute->id);
-            //->groupBy('assign_bus_route_to_driver.bus_id');
+            $businfo = DB::table('assign_bus_route_to_driver as assign_bus')
+                ->leftJoin('bus_list', 'bus_list.id', 'assign_bus.bus_id')
+                ->leftJoin('users', 'users.id', 'assign_bus.driver_user_id')
+                ->select(
+                    'bus_list.id as bus_id',
+                    'bus_list.bus_name',
+                    'bus_list.bus_number',
+                    'users.name as driver_name'
+                )
+                ->where('assign_bus.route_id', $singleRoute->id)
+                ->groupBy('assign_bus.id');
 
-            $dateWiseBusInfo = $businfo->leftJoin('location', 'location.bus_id', 'assign_bus_route_to_driver.bus_id')->whereBetween('location.created_at', [date('Y-m-d') . " 00:00:00", date('Y-m-d') . " 23:59:59"]);
-
+            $total_bus = $businfo->get()->count();
+            $dateWiseBusInfo = $businfo->leftJoin('location', 'location.bus_id', 'assign_bus.bus_id')->whereBetween('location.created_at', [date('Y-m-d') . " 00:00:00", date('Y-m-d') . " 23:59:59"]);
             $activeBusList = $dateWiseBusInfo->get();
+
 
             $data = [
                 "route_id" =>  $singleRoute->id,
                 "route_name" => $singleRoute->route_name,
                 "route_code" => $singleRoute->route_code,
-                "total_bus" => $businfo->get()->count() ?? 0,
+                "total_bus" => $total_bus,
                 "active_bus" => $activeBusList->count() ?? 0,
                 "active_bus_list" => !empty($activeBusList) ? $activeBusList : (object)[],
 
