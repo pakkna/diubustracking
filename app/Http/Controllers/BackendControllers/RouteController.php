@@ -168,11 +168,11 @@ class RouteController extends Controller
 
         foreach ($routes as $singleRoute) {
             $businfo = AssignBus::select('bus_list.id as bus_id', 'bus_list.bus_name', 'bus_list.bus_number', 'users.name as driver_name')
-                ->join('bus_list', 'bus_list.id', 'assign_bus_route_to_driver.bus_id')
-                ->join('users', 'users.id', 'assign_bus_route_to_driver.driver_user_id')
-                ->join('location', 'location.bus_id', 'assign_bus_route_to_driver.bus_id')
-                ->where('assign_bus_route_to_driver.route_id', $singleRoute->id)
-                ->groupBy('assign_bus_route_to_driver.id');
+                ->leftJoin('bus_list', 'bus_list.id', 'assign_bus_route_to_driver.bus_id')
+                ->leftJoin('users', 'users.id', 'assign_bus_route_to_driver.driver_user_id')
+                ->leftJoin('location', 'location.bus_id', 'assign_bus_route_to_driver.bus_id')
+                ->where('assign_bus_route_to_driver.route_id', $singleRoute->id);
+            //->groupBy('assign_bus_route_to_driver.bus_id');
 
             $dateWiseBusInfo = $businfo->whereBetween('location.created_at', [date('Y-m-d') . " 00:00:00", date('Y-m-d') . " 23:59:59"]);
 
