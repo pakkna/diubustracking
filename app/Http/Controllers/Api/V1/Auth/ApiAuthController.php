@@ -10,7 +10,6 @@ use App\Http\Controllers\Controller;
 use App\Traits\ActivityTrait;
 use App\Models\User;
 use Validator;
-use DB;
 
 class ApiAuthController extends Controller
 {
@@ -18,7 +17,7 @@ class ApiAuthController extends Controller
 
     public function  __construct()
     {
-        $this->middleware('auth:api', ['except' => ['registration', 'login_for_user', 'match_mobile_number', 'code_combination', 'cache_clear', 'LoginWithThirdPartyApi']]);
+        $this->middleware('auth:api', ['except' => ['registration', 'login_for_user', 'match_mobile_number', 'code_combination', 'LoginWithThirdPartyApi']]);
     }
 
     protected function guard()
@@ -205,15 +204,6 @@ class ApiAuthController extends Controller
                 return $this->ResponseJson(true, "Invalid Credentials.", (object)[], 401);
             }
         }
-    }
-
-    public function cache_clear()
-    {
-        $exitCode1 = Artisan::call('cache:clear');
-        $exitCode2 = Artisan::call('route:cache');
-        $exitCode3 = Artisan::call('config:cache');
-
-        echo "all Cleared";
     }
 
 

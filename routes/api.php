@@ -4,8 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\V1\Auth\ApiAuthController;
-//use App\Http\Controllers\Api\V1\PayBuilderApi\PayBuilderController;
-use App\Http\Controllers\Api\V1\PayBuilderApi\HomebuilderController;
+use App\Http\Controllers\BackendControllers\UserController;
+use App\Http\Controllers\BackendControllers\RouteController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,10 +27,20 @@ Route::group(['middleware' => 'api', 'namespace' => 'App\Http\Controllers\Api\V1
     Route::any('logout', [ApiAuthController::class, 'logout']);
     Route::post('refresh', [ApiAuthController::class, 'refresh']);
     Route::post('userinfo', [ApiAuthController::class, 'userInfo']);
-    Route::get('/clear', [ApiAuthController::class, 'cache_clear']);
 });
 
-//Home Builder Api
+//Afer Login Route List
+Route::group(['middleware' => 'api'], function () {
+
+    Route::get('/route-schedule-list', [RouteController::class, 'route_schedule_list']);
+    Route::get('/route-wise-bus', [RouteController::class, 'route_wise_bus']);
+
+    //Driver Bus Info
+    Route::get('/driver-bus-info', [UserController::class, 'driver_bus_info']);
+    Route::post('/driver-bus-location-send', [UserController::class, 'driver_bus_location_post']);
+    Route::post('/bus-location-get', [UserController::class, 'bus_location_get']);
+});
+
 
 /* Route::group(['middleware' => 'api', 'namespace' => 'App\Http\Controllers\Api\V1\PayBuilderApi'], function () {
 

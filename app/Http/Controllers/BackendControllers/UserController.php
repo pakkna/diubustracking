@@ -3,13 +3,20 @@
 namespace App\Http\Controllers\BackendControllers;
 
 use App\Models\User;
+use App\Models\Location;
+use App\Models\AssignBus;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    protected function guard()
+    {
+        return Auth::guard('api');
+    }
     public function registered_app_users()
     {
         return view('dashboard..app_users.registered_app_users');
@@ -125,6 +132,131 @@ class UserController extends Controller
             $errorCode = $e->errorInfo[1];
             if ($errorCode == '1062') {
                 return redirect("edit-profile")->with("flashMessageDanger", "User Name Already Exists ! Try Another One.");
+            }
+        }
+    }
+
+    public function driver_bus_info()
+    {
+        $user = $this->guard()->user();
+
+        if (empty($user)) {
+            return $this->ResponseJson(false, 'User Auth Token Expired!', (object)[], 200);
+        }
+
+
+        $singleAssignBus = AssignBus::select(
+            'bus_list.id as bus_id',
+            'bus_list.bus_name',
+            'bus_list.bus_number',
+            'route_list.id as route_id',
+            'route_list.route_name',
+            'route_list.route_code',
+            'route_list.route_details',
+            'route_list.start_time_slot',
+            'route_list.departure_time_slot',
+            'route_list.route_map_url',
+        )
+            ->join('bus_list', 'bus_list.id', 'assign_bus_route_to_driver.bus_id')
+            ->join('route_list', 'route_list.id', 'assign_bus_route_to_driver.route_id')
+            ->where('assign_bus_route_to_driver.driver_user_id', $user->id)->first();
+
+        if (!empty($singleAssignBus)) {
+            $data = [
+                "driver_id" => $user->id,
+                "bus_id" =>  $singleAssignBus->bus_id,
+                "route_id" =>  $singleAssignBus->route_id,
+                "bus_name" =>  $singleAssignBus->bus_name,
+                "bus_number" =>  $singleAssignBus->bus_number,
+                "route_name" => $singleAssignBus->route_name,
+                "route_code" => $singleAssignBus->route_code,
+                "route_details" => $singleAssignBus->route_details,
+                "start_time_slot" => json_decode($singleAssignBus->start_time_slot),
+                "departure_time_slot" => json_decode($singleAssignBus->departure_time_slot),
+                "route_map_url" => $singleAssignBus->route_map_url
+            ];
+            return $this->ResponseJson(false, 'Driver Bus Assign Info', $data, 200);
+        } else {
+
+            return $this->ResponseJson(false, 'Driver Not Assign Any Bus', $data, 200);
+        }
+    }
+
+    public function driver_bus_location_post(Request $request)
+    {
+        $user = $this->guard()->user();
+
+        if (empty($user)) {
+            return $this->ResponseJson(false, 'User Auth Token Expired!', (object)[], 200);
+        }
+
+        $validator = \Validator::make($request->all(), [
+            'lat' => 'required',
+            'long' => 'required',
+            'bus_id' => 'required|numeric|exists:bus_list,id',
+            'route_id' => 'required|numeric|exists:route_list,id',
+            'user_id' => 'required|numeric|exists:users,id',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(true, 'Validation Error.', $validator->messages()->all(), 406);
+        } else {
+
+
+
+            try {
+                $todayLocation = Location::where('bus_id', $request->bus_id)
+                    ->where('route_id', $request->route_id)
+                    ->where('user_id', $user->id)
+                    ->whereDate('created_at', date('Y-m-d'));
+
+                if (!$todayLocation->exists()) {
+                    $data = [
+                        'lat' => $request->lat,
+                        'long' => $request->long,
+                        'bus_id' => $request->bus_id,
+                        'route_id' => $request->route_id,
+                        'user_id' => $user->id,
+                    ];
+                    $saveLocation = Location::create($data);
+                } else {
+                    $data = [
+                        'lat' => $request->lat,
+                        'long' => $request->long,
+                    ];
+                    $updateLocation =  $todayLocation->update($data);
+                }
+
+                return $this->ResponseJson(false, 'Bus location save', ['lat' => $request->lat, 'long' => $request->long], 200);
+            } catch (\Throwable $th) {
+                return $this->sendError(true, 'Registration Insert Error', $th->getMessage(), 406);
+            }
+        }
+    }
+    public function bus_location_get(Request $request)
+    {
+        $user = $this->guard()->user();
+
+        if (empty($user)) {
+            return $this->ResponseJson(false, 'User Auth Token Expired!', (object)[], 200);
+        }
+
+        $validator = \Validator::make($request->all(), [
+            'bus_id' => 'required|numeric|exists:bus_list,id',
+            'route_id' => 'required|numeric|exists:route_list,id',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError(true, 'Validation Error.', $validator->messages()->all(), 406);
+        } else {
+
+            try {
+                $todayLocation = Location::where('bus_id', $request->bus_id)
+                    ->where('route_id', $request->route_id)
+                    ->whereDate('created_at', date('Y-m-d'))->first();
+
+
+                return $this->ResponseJson(false, 'Bus Location Info', $todayLocation, 200);
+            } catch (\Throwable $th) {
+                return $this->sendError(true, 'Registration Insert Error', $th->getMessage(), 406);
             }
         }
     }

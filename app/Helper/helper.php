@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Str;
 
 if (!function_exists('datetime_validate')) {
@@ -31,7 +32,8 @@ if (!function_exists('dateFormate')) {
 }
 
 if (!function_exists('makeUniqueNumericCode')) {
-    function makeUniqueNumericCode($length) {
+    function makeUniqueNumericCode($length)
+    {
         $con = '';
         $number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
         for ($i = 0; $i < $length; $i++) {

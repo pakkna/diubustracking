@@ -3,13 +3,20 @@
 
 namespace App\Http\Controllers\BackendControllers;
 
+use Validator;
 use App\Models\Route;
+use App\Models\AssignBus;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 
 class RouteController extends Controller
 {
+    protected function guard()
+    {
+        return Auth::guard('api');
+    }
+
     public function route_create()
     {
 
@@ -127,5 +134,63 @@ class RouteController extends Controller
         } else {
             echo json_encode(['msg' => 'Error', 'type' => 'delete', 'action' => '0']);
         }
+    }
+
+    public function route_schedule_list(Request $request)
+    {
+        //$user_id = $this->guard()->id ?? 0;
+        $routes = Route::all();
+        $routeSchedules = [];
+
+        foreach ($routes as $singleRoute) {
+            $data = [
+                "id" =>  $singleRoute->id,
+                "route_name" => $singleRoute->route_name,
+                "route_code" => $singleRoute->route_code,
+                "route_details" => $singleRoute->route_details,
+                "start_time_slot" => json_decode($singleRoute->start_time_slot),
+                "departure_time_slot" => json_decode($singleRoute->departure_time_slot),
+                "route_map_url" => $singleRoute->route_map_url
+            ];
+
+            array_push($routeSchedules, $data);
+        }
+
+
+        return $this->ResponseJson(false, 'Route Schedule', $routeSchedules, 200);
+    }
+    public function route_wise_bus(Request $request)
+    {
+        //$user_id = $this->guard()->id ?? 0;
+        $routes = Route::all();
+
+        $routeWiseBusInfo = [];
+
+        foreach ($routes as $singleRoute) {
+            $businfo = AssignBus::select('bus_list.id as bus_id', 'bus_list.bus_name', 'bus_list.bus_number', 'users.name as driver_name')
+                ->join('bus_list', 'bus_list.id', 'assign_bus_route_to_driver.bus_id')
+                ->join('users', 'users.id', 'assign_bus_route_to_driver.driver_user_id')
+                ->join('location', 'location.bus_id', 'assign_bus_route_to_driver.bus_id')
+                ->where('assign_bus_route_to_driver.route_id', $singleRoute->id)
+                ->groupBy('assign_bus_route_to_driver.id');
+
+            $dateWiseBusInfo = $businfo->whereBetween('location.created_at', [date('Y-m-d') . " 00:00:00", date('Y-m-d') . " 23:59:59"]);
+
+            $activeBusList = $dateWiseBusInfo->get();
+
+            $data = [
+                "route_id" =>  $singleRoute->id,
+                "route_name" => $singleRoute->route_name,
+                "route_code" => $singleRoute->route_code,
+                "total_bus" => $businfo->get()->count() ?? 0,
+                "active_bus" => $activeBusList->count() ?? 0,
+                "active_bus_list" => !empty($activeBusList) ? $activeBusList : (object)[],
+
+            ];
+            array_push($routeWiseBusInfo, $data);
+        }
+
+
+        return $this->ResponseJson(false, 'Route Schedule', $routeWiseBusInfo, 200);
     }
 }
